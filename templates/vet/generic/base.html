@@ -7,10 +7,24 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://arshaw.com/xdate/downloads/0.8.2/xdate.js"></script>
 <script>
     $(function () {
         $(".datepicker").datepicker();
+
+        $(".age").text(function (i, origText) {
+            let now = new XDate();
+            let birth = new XDate(origText);
+            let year = Math.floor(birth.diffYears(now));
+            let month = Math.floor(birth.diffMonths(now) % 12);
+            return year + ' year ' + month + ' month';
+        });
+        $(".autocomplete").autocomplete({
+            source: "{% url 'vet:ajax-autocomplete-genus' %}",
+            minLength: 2,
+        });
     });
+
 </script>
 <head>
     <meta charset="UTF-8">

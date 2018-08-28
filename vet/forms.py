@@ -12,10 +12,13 @@ class UserForm(forms.ModelForm):
 
 
 class AnimalForm(forms.ModelForm):
+    genus = forms.CharField(widget=forms.TextInput(attrs={'class': 'autocomplete'}))
     class Meta:
         model = Animal
         fields = "__all__"
-        widgets = {'birth': forms.DateInput(attrs={'class': 'datepicker'})}
+        widgets = {
+            'birth': forms.DateInput(attrs={'class': 'datepicker'}),
+        }
 
 
 class OwnerForm(forms.ModelForm):

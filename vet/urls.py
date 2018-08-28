@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import Animal, Owner, UserFormView, Appointment
+from .views import Animal, Owner, UserFormView, Appointment,Ajax
 from django.views.generic import RedirectView
 
 app_name = 'vet'
@@ -31,11 +31,15 @@ url_user = [
     path('register/', UserFormView.as_view(), name='user-register'),
     path('logout/', UserFormView.as_view(), name='user-logout')
 ]
+url_ajax = [
+    path('genus/', Ajax.get_species, name='ajax-autocomplete-genus'),
+]
 
 urlpatterns = [
     path('owner/', include(url_owner)),
     path('animal/', include(url_animal)),
     path('appointment/', include(url_appointment)),
     path('user/', include(url_user)),
+    path('ajax/', include(url_ajax)),
     path('', RedirectView.as_view(pattern_name='vet:owner-list')),
 ]

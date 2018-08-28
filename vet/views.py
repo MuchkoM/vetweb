@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.views import generic
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 from . import models
 from . import forms
+import json
 
 
 class Owner:
@@ -82,6 +84,22 @@ class Appointment:
         model = models.Appointment
         template_name = 'vet/generic/generic_confirm_delete.html'
         success_url = reverse_lazy('vet:appointment-list')
+
+
+class Ajax:
+    @staticmethod
+    def get_species(request):
+        if request.is_ajax():
+            q = request.GET.get('term', '')
+            result = list(models.Animal.objects
+                          .filter(genus__contains=q)
+                          .distinct()
+                          .values_list('genus', flat=True))
+            data = json.dumps(result)
+        else:
+            data = 'fail'
+
+        return HttpResponse(data, 'application/json')
 
 
 class UserFormView(generic.View):
