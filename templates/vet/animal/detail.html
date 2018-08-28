@@ -1,0 +1,8 @@
+{% extends 'vet/generic/base.html' %}
+{% block title %}Animal detail{% endblock %}
+{% block body %}
+    {% include 'vet/specialiation/animal_detail_template.html' %}
+    <a href="{% url 'vet:animal-update' object.pk %}"> Update animal</a>
+    <a href="{% url 'vet:animal-delete' object.pk %}"> Delete animal</a>
+</form>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<link rel=”stylesheet” href=”https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css”>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.0/themes/base/jquery-ui.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $(".datepicker").datepicker();
+    });
+</script>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock %}</title>
+</head>
+<body>
+<a href="{% url 'vet:owner-list' %}">Owners</a>
+<a href="{% url 'vet:animal-list' %}">Animals</a>
+<a href="{% url 'vet:appointment-list' %}">Appointments</a>
+<a href="{% url 'vet:owner-create' %}">Add owner</a>
+<a href="{% url 'vet:animal-create' %}">Add animal</a>
+<a href="{% url 'vet:appointment-create' %}">Add appointment</a>
+<a href="{% url 'vet:user-register' %}">Register</a>
+<a href="{% url 'vet:user-logout' %}">Logout</a><br>
+{% block body %}
+{% endblock %}
+</body>
+</html>
