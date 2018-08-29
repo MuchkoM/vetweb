@@ -21,8 +21,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('account/', include('account.urls')),
     path('vet/', include('vet.urls')),
-    path('', RedirectView.as_view(pattern_name='vet:owner-list',permanent = True))
+    path('', RedirectView.as_view(pattern_name='vet:owner-list', permanent=True))
 ]
 
 if settings.DEBUG:

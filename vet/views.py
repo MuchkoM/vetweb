@@ -1,5 +1,4 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+
 from django.views import generic
 from django.urls import reverse_lazy
 from django.http import HttpResponse
@@ -60,6 +59,36 @@ class Animal:
         success_url = reverse_lazy('vet:animal-list')
 
 
+class Ajax:
+    @staticmethod
+    def species(request):
+        if request.is_ajax():
+            q = request.GET['term']
+            result = list(models.Species.objects
+                          .filter(genus__contains=q)
+                          .distinct()
+                          .values_list('genus', flat=True))
+            data = json.dumps(result)
+        else:
+            data = 'fail'
+
+        return HttpResponse(data, 'application/json')
+
+    @staticmethod
+    def subspecies(request):
+        if request.is_ajax():
+            q = request.GET.get('term', '')
+            result = list(models.Animal.objects
+                          .filter(genus__contains=q)
+                          .distinct()
+                          .values_list('genus', flat=True))
+            data = json.dumps(result)
+        else:
+            data = 'fail'
+
+        return HttpResponse(data, 'application/json')
+
+
 class Appointment:
     class Create(generic.CreateView):
         form_class = forms.AppointmentForm
@@ -86,44 +115,4 @@ class Appointment:
         success_url = reverse_lazy('vet:appointment-list')
 
 
-class Ajax:
-    @staticmethod
-    def get_species(request):
-        if request.is_ajax():
-            q = request.GET.get('term', '')
-            result = list(models.Animal.objects
-                          .filter(genus__contains=q)
-                          .distinct()
-                          .values_list('genus', flat=True))
-            data = json.dumps(result)
-        else:
-            data = 'fail'
 
-        return HttpResponse(data, 'application/json')
-
-
-class UserFormView(generic.View):
-    form_class = forms.UserForm
-    template_name = 'vet/registration_form.html'
-
-    def get(self, request):
-        form = self.form_class(None)
-        return render(request, self.template_name, {"form": form})
-
-    def post(self, request):
-        form = self.form_class(request.POST)
-
-        if form.is_valid():
-            user = form.save(commit=False)
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
-            user.set_password(password)
-            user.save()
-
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return redirect('vet:owner-list')
-
-        return render(request, self.template_name, {"form": form})

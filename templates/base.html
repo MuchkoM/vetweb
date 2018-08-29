@@ -20,7 +20,7 @@
             return year + ' year ' + month + ' month';
         });
         $(".autocomplete").autocomplete({
-            source: "{% url 'vet:ajax-autocomplete-genus' %}",
+            source: "{% url 'vet:ajax-autocomplete-species' %}",
             minLength: 2,
         });
     });
@@ -37,8 +37,8 @@
 <a href="{% url 'vet:owner-create' %}">Add owner</a>
 <a href="{% url 'vet:animal-create' %}">Add animal</a>
 <a href="{% url 'vet:appointment-create' %}">Add appointment</a>
-<a href="{% url 'vet:user-register' %}">Register</a>
-<a href="{% url 'vet:user-logout' %}">Logout</a><br>
+<a href="{% url 'account:user-register' %}">Register</a>
+<a href="{% url 'account:user-logout' %}">Logout</a><br>
 {% block body %}
 {% endblock %}
 </body>
