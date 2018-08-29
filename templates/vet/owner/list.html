@@ -1,3 +1,10 @@
-{% extends 'vet/generic/generic_list.html' %}
-{% block title %}Owner list{% endblock %}
-{% block detail %}{% include 'vet/owner/owner_detail_template.html' %}{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Список всех владельцев{% endblock %}
+{% block body %}
+    {% for object in object_list %}
+        <strong>Владелец: </strong><a href="{% url 'vet:owner-detail' object.pk %}">{{ object.fio }}</a><br>
+        <strong>Адресс: </strong> {{ object.address }}<br>
+        <br>
+    {% endfor %}
+{% endblock %}
+

@@ -1,3 +1,11 @@
-{% extends 'vet/generic/generic_list.html' %}
-{% block title %}Animal list{% endblock %}
-{% block detail %}{% include 'vet/animal/animal_detail_template.html' %}{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Список всех животных{% endblock %}
+{% block body %}
+    {% for object in object_list %}
+        <strong>Владелец: </strong><a href="{% url 'vet:owner-detail' object.owner.pk %}">{{ object.owner }}</a><br>
+        <strong>Животное: </strong>
+        <a href="{% url 'vet:animal-detail' object.pk %}">{{ object.name }} {{ object.species.value }}</a>
+        <br>
+        <br>
+    {% endfor %}
+{% endblock %}

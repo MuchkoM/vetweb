@@ -1,3 +1,12 @@
-{% extends 'vet/generic/generic_list.html' %}
-{% block title %}Appointment list{% endblock %}
-{% block detail %}{% include 'vet/appointment/appointment_detail_template.html' %}{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Списко всех приёмов{% endblock %}
+{% block body %}
+    {% for object in object_list %}
+        <a href="{% url 'vet:owner-detail' object.animal.owner.pk %}">{{ object.animal.owner }}</a><br>
+        <a href="{% url 'vet:animal-detail' object.animal.pk %}">{{ object.animal }}</a><br>
+        <a href="{% url 'vet:appointment-detail' object.pk %}">{{ object }}</a><br>
+        <br>
+    {% endfor %}
+{% endblock %}
+
+

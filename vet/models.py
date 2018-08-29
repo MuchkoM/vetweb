@@ -53,11 +53,11 @@ class Animal(models.Model):
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     birth = models.DateField(blank=False)
-    gender = models.BooleanField(choices=GENDER_CHOICE)
+    gender = models.BooleanField(choices=GENDER_CHOICE, default=False)
     species = models.ForeignKey(Species, on_delete=models.DO_NOTHING)
     subspecies = models.ForeignKey(Subspecies, on_delete=models.DO_NOTHING, null=True)
-    aggressive = models.CharField(max_length=1, choices=AGGRESSIVE_CHOICE)
-    identification = models.CharField(max_length=1, choices=IDENTIFICATION_CHOICE)
+    aggressive = models.CharField(max_length=1, choices=AGGRESSIVE_CHOICE, default='L')
+    identification = models.CharField(max_length=1, choices=IDENTIFICATION_CHOICE, default='_')
     identification_value = models.CharField(max_length=50, blank=True)
     is_sterilization = models.BooleanField(default=False, choices=YES_NO_CHOICE)
     is_die = models.BooleanField(default=False, choices=YES_NO_CHOICE)
@@ -78,6 +78,9 @@ class Appointment(models.Model):
     appointment_date = models.DateField(blank=False)
     type = models.CharField(max_length=1, choices=APPOINTMENT_CHOICE)
     description = models.CharField(max_length=1000)
+
+    def get_absolute_url(self):
+        return reverse('vet:appointment-detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return f'{self.appointment_date}'
