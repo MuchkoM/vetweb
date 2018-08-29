@@ -9,22 +9,56 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://arshaw.com/xdate/downloads/0.8.2/xdate.js"></script>
 <script>
+    function getRusStringNumber(value, localYear) {
+        let loc_string;
+        switch (value % 10) {
+            case 1:
+                loc_string = localYear[0];
+                break;
+            case 2:
+            case 3:
+            case 4:
+                loc_string = localYear[1];
+                break;
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 0:
+                loc_string = localYear[2];
+                break;
+        }
+        if (value < 20 && value > 11) {
+            loc_string = localYear[2]
+        }
+        return value + ' ' + loc_string
+    }
+    function getRusStringYear(year) {
+        return getRusStringNumber(year, ['год', 'года', 'лет'])
+    }
+    function getRusStringMonth(month) {
+        return getRusStringNumber(month, ['месяц', 'месяца', 'месяцев'])
+    }
+
     $(function () {
         $(".datepicker").datepicker();
-
         $(".age").text(function (i, origText) {
             let now = new XDate();
             let birth = new XDate(origText);
             let year = Math.floor(birth.diffYears(now));
             let month = Math.floor(birth.diffMonths(now) % 12);
-            return year + ' year ' + month + ' month';
+            return getRusStringYear(year) + ' ' + getRusStringMonth(month);
         });
-        $(".autocomplete").autocomplete({
+        $(".autocomplete[name='species']").autocomplete({
             source: "{% url 'vet:ajax-autocomplete-species' %}",
             minLength: 2,
         });
+        $(".autocomplete[name='subspecies']").autocomplete({
+            source: "{% url 'vet:ajax-autocomplete-subspecies' %}",
+            minLength: 2,
+        });
     });
-
 </script>
 <head>
     <meta charset="UTF-8">

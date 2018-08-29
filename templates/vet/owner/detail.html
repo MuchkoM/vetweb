@@ -1,7 +1,7 @@
 {% extends 'vet/generic/../../base.html' %}
 {% block title %}Owner detail{% endblock %}
 {% block body %}
-    {% include 'vet/specialiation/owner_detail_template.html' %}
+    {% include 'vet/owner/owner_detail_template.html' %}
     <a href="{% url 'vet:animal-create' %}"> Add animal to owner</a>
     <a href="{% url 'vet:owner-update' object.pk %}"> Update current owner</a>
     <a href="{% url 'vet:owner-delete' object.pk %}"> Delete current owner</a>

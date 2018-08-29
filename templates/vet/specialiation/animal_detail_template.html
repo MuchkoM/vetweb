@@ -1,6 +1,0 @@
-<a href="{% url 'vet:owner-detail' object.owner.pk %}">{{ object.owner }}</a><br>
-<a href="{% url 'vet:animal-detail' object.pk %}">{{ object.name }}</a><br>
-<div class="age">{{ object.birth }}</div>
-<div class="gender">{{ object.get_gender_display}}</div>
-{{ object.genus }}<br>
-{{ object.spec }}<br>

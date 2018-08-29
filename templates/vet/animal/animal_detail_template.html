@@ -1,0 +1,10 @@
+<strong>Владелец: </strong><a href="{% url 'vet:owner-detail' object.owner.pk %}">{{ object.owner }}</a><br>
+<strong>Животное: </strong><a href="{% url 'vet:animal-detail' object.pk %}">{{ object.name }}</a><br>
+<strong>Возвраст: </strong><l class="age">{{object.birth}}</l><br>
+<strong>Пол: </strong> {{ object.get_gender_display}}<br>
+<strong>Вид: </strong>{{ object.species.value}}<br>
+<strong>Порода: </strong>{{ object.subspecies.value }}<br>
+<strong>Агрессивность: </strong> {{ object.get_aggressive_display}}<br>
+<strong>Индефикация: </strong> {{ object.get_identification_display}}<br>
+<strong>Стереализация: </strong> {{ object.get_is_sterilization_display}}<br>
+<strong>Умерло: </strong> {{ object.get_is_die_display}}<br>

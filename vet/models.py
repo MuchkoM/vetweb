@@ -4,7 +4,7 @@ from django.urls import reverse
 
 class Owner(models.Model):
     fio = models.CharField(max_length=50)
-    address = models.CharField(max_length=70)
+    address = models.CharField(max_length=70, blank=True)
     phone = models.CharField(max_length=14, blank=True)
     email = models.EmailField(max_length=50, blank=True)
 
@@ -32,8 +32,8 @@ class Subspecies(models.Model):
 
 class Animal(models.Model):
     GENDER_CHOICE = (
-        ('F', 'Самка'),
-        ('M', 'Самец'),
+        (True, 'Самка'),
+        (False, 'Самец'),
     )
     AGGRESSIVE_CHOICE = (
         ('L', 'Низкая'),
@@ -45,18 +45,22 @@ class Animal(models.Model):
         ('C', 'Чипирование'),
         ('S', 'Клеймо'),
     )
+    YES_NO_CHOICE = (
+        (True, 'Да'),
+        (False, 'Нет'),
+    )
 
     owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     birth = models.DateField(blank=False)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICE)
+    gender = models.BooleanField(choices=GENDER_CHOICE)
     species = models.ForeignKey(Species, on_delete=models.DO_NOTHING)
-    subspecies = models.ForeignKey(Subspecies, on_delete=models.DO_NOTHING)
+    subspecies = models.ForeignKey(Subspecies, on_delete=models.DO_NOTHING, null=True)
     aggressive = models.CharField(max_length=1, choices=AGGRESSIVE_CHOICE)
     identification = models.CharField(max_length=1, choices=IDENTIFICATION_CHOICE)
     identification_value = models.CharField(max_length=50, blank=True)
-    is_sterilization = models.BooleanField(default=False)
-    is_live = models.BooleanField(default=True)
+    is_sterilization = models.BooleanField(default=False, choices=YES_NO_CHOICE)
+    is_die = models.BooleanField(default=False, choices=YES_NO_CHOICE)
 
     def get_absolute_url(self):
         return reverse('vet:animal-detail', kwargs={'pk': self.pk})

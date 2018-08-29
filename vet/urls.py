@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import Animal, Owner, Appointment, Ajax
+from .views import Animal, Owner, Appointment, Ajax, Species, Subspecies
 from django.views.generic import RedirectView
 
 app_name = 'vet'
@@ -30,10 +30,15 @@ url_ajax = [
     path('subspecies/', Ajax.subspecies, name='ajax-autocomplete-subspecies'),
 ]
 
+url_species = [
+    path('add/<slug:slug>', Species.add_species, name='species-add')
+]
+
 urlpatterns = [
     path('owner/', include(url_owner)),
     path('animal/', include(url_animal)),
     path('appointment/', include(url_appointment)),
+    path('species/', include(url_species)),
     path('ajax/', include(url_ajax)),
-    path('', RedirectView.as_view(pattern_name='vet:owner-list')),
+    path('', RedirectView.as_view(pattern_name='vet:owner-list', permanent=False)),
 ]
