@@ -6,7 +6,7 @@ from . import forms
 import json
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class Species:
@@ -99,11 +99,11 @@ class Ajax:
     def species(request):
         if request.is_ajax():
             q = request.GET['term']
-            logging.info(q)
+            logger.info(q)
             result = list(models.Species.objects
                           .filter(value__icontains=q)[:10]
                           .values_list('value', flat=True))
-            logging.info(result)
+            logger.info(result)
 
             data = json.dumps(result)
         else:
@@ -113,12 +113,14 @@ class Ajax:
     @staticmethod
     def subspecies(request):
         if request.is_ajax():
+
+            # TODO Add species_ in filter of subspeies
             q = request.GET['term']
-            logging.info(q)
+            logger.info(q)
             result = list(models.Subspecies.objects
                           .filter(value__icontains=q)[:10]
                           .values_list('value', flat=True))
-            logging.info(result)
+            logger.info(result)
 
             data = json.dumps(result)
         else:
