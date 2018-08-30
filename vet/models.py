@@ -3,10 +3,10 @@ from django.urls import reverse
 
 
 class Owner(models.Model):
-    fio = models.CharField(max_length=50)
-    address = models.CharField(max_length=70, blank=True)
-    phone = models.CharField(max_length=14, blank=True)
-    email = models.EmailField(max_length=50, blank=True)
+    fio = models.CharField(verbose_name='ФИО', max_length=50)
+    address = models.CharField(verbose_name='Адрес', max_length=70, blank=True)
+    phone = models.CharField(verbose_name='Телефон', max_length=14, blank=True)
+    email = models.EmailField(verbose_name='Email', max_length=50, blank=True)
 
     def get_absolute_url(self):
         return reverse('vet:owner-detail', kwargs={'pk': self.pk})
@@ -27,40 +27,74 @@ class Subspecies(models.Model):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.value}'
+        return f'{self.species} {self.value}'
 
 
 class Animal(models.Model):
-    GENDER_CHOICE = (
-        (True, 'Самка'),
-        (False, 'Самец'),
-    )
+    AGGRESSIVE_LOW = 'l'
+    AGGRESSIVE_MEDIUM = 'm'
+    AGGRESSIVE_HIGH = 'h'
     AGGRESSIVE_CHOICE = (
-        ('L', 'Низкая'),
-        ('M', 'Средняя'),
-        ('H', 'Высокая'),
-    )
-    IDENTIFICATION_CHOICE = (
-        ('_', 'Отсутствует'),
-        ('C', 'Чипирование'),
-        ('S', 'Клеймо'),
-    )
-    YES_NO_CHOICE = (
-        (True, 'Да'),
-        (False, 'Нет'),
+        (AGGRESSIVE_LOW, 'Низкая'),
+        (AGGRESSIVE_MEDIUM, 'Средняя'),
+        (AGGRESSIVE_HIGH, 'Высокая'),
     )
 
-    owner = models.ForeignKey(Owner, on_delete=models.CASCADE)
-    name = models.CharField(max_length=50)
-    birth = models.DateField(blank=False)
-    gender = models.BooleanField(choices=GENDER_CHOICE, default=False)
-    species = models.ForeignKey(Species, on_delete=models.DO_NOTHING)
-    subspecies = models.ForeignKey(Subspecies, on_delete=models.DO_NOTHING, null=True)
-    aggressive = models.CharField(max_length=1, choices=AGGRESSIVE_CHOICE, default='L')
-    identification = models.CharField(max_length=1, choices=IDENTIFICATION_CHOICE, default='_')
-    identification_value = models.CharField(max_length=50, blank=True)
-    is_sterilization = models.BooleanField(default=False, choices=YES_NO_CHOICE)
-    is_die = models.BooleanField(default=False, choices=YES_NO_CHOICE)
+    GENDER_MALE = True
+    GENDER_FEMALE = False
+    GENDER_CHOICE = (
+        (GENDER_MALE, 'Самец'),
+        (GENDER_FEMALE, 'Самка'),
+    )
+
+    IDENTIFICATION_NONE = 'n'
+    IDENTIFICATION_CHIP = 'c'
+    IDENTIFICATION_STIGMA = 's'
+    IDENTIFICATION_CHOICE = (
+        (IDENTIFICATION_NONE, 'Отсутствует'),
+        (IDENTIFICATION_CHIP, 'Чипирование'),
+        (IDENTIFICATION_STIGMA, 'Клеймо'),
+    )
+
+    YES = True
+    NO = False
+    YES_NO_CHOICE = (
+        (YES, 'Да'),
+        (NO, 'Нет'),
+    )
+
+    owner = models.ForeignKey(Owner, verbose_name='Владелец',
+                              on_delete=models.CASCADE)
+    name = models.CharField(verbose_name='Кличка',
+                            max_length=50)
+    birth = models.DateField(verbose_name='Дата рождения',
+                             blank=False)
+    gender = models.BooleanField(verbose_name='Пол',
+                                 choices=GENDER_CHOICE,
+                                 default=GENDER_MALE)
+    species = models.ForeignKey(Species, verbose_name='Вид',
+                                on_delete=models.DO_NOTHING)
+    subspecies = models.ForeignKey(Subspecies,
+                                   verbose_name='Порода',
+                                   on_delete=models.DO_NOTHING,
+                                   null=True)
+    aggressive = models.CharField(verbose_name='Агрессивность',
+                                  max_length=1,
+                                  choices=AGGRESSIVE_CHOICE,
+                                  default=AGGRESSIVE_LOW)
+    identification = models.CharField(verbose_name='Идентификация',
+                                      max_length=1,
+                                      choices=IDENTIFICATION_CHOICE,
+                                      default=IDENTIFICATION_NONE)
+    identification_value = models.CharField(verbose_name='Код идентификации',
+                                            max_length=50,
+                                            blank=True)
+    is_sterilization = models.BooleanField(verbose_name='Стериализация',
+                                           choices=YES_NO_CHOICE,
+                                           default=NO)
+    is_die = models.BooleanField(verbose_name='Погибло',
+                                 choices=YES_NO_CHOICE,
+                                 default=NO)
 
     def get_absolute_url(self):
         return reverse('vet:animal-detail', kwargs={'pk': self.pk})

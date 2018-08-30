@@ -1,6 +1,6 @@
 from django.views import generic
-from django.urls import reverse, reverse_lazy
-from django.http import HttpResponse,HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.http import HttpResponse, HttpResponseRedirect
 from . import models
 from . import forms
 import json
