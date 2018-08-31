@@ -14,6 +14,7 @@ url_owner = [
 url_animal = [
     path('', AnimalView.List.as_view(), name='animal-list'),
     path('create/', AnimalView.Create.as_view(), name='animal-create'),
+    path('create/<int:owner_pk>', AnimalView.Create.as_view(), name='animal-create-owner'),
     path('<int:pk>/', AnimalView.Detail.as_view(), name='animal-detail'),
     path('<int:pk>/update', AnimalView.Update.as_view(), name='animal-update'),
     path('<int:pk>/delete', AnimalView.Delete.as_view(), name='animal-delete'),

@@ -4,5 +4,4 @@
     {% include 'vet/animal/animal_detail_template.html' %}
     <a href="{% url 'vet:animal-update' object.pk %}"> Update animal</a>
     <a href="{% url 'vet:animal-delete' object.pk %}"> Delete animal</a>
-</form>
 {% endblock %}
