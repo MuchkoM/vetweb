@@ -1,54 +1,55 @@
 from .models import Animal, Owner, Appointment, Species, Subspecies
 from django import forms
-import logging
-
-logger = logging.getLogger(__name__)
+from django.utils.translation import ugettext as _
 
 
 class AnimalForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # self.fields['owner'].initial =1
+
+        self.fields['owner'].widget.attrs['class'] = "autocomplete"
+        self.fields['owner'].widget.attrs['autocomplete'] = "off"
+
+        self.fields['name'].widget.attrs['class'] = "autocomplete"
+        self.fields['name'].widget.attrs['autocomplete'] = "off"
 
         self.fields['birth'].widget.attrs['class'] = "datepicker"
         self.fields['birth'].widget.attrs['autocomplete'] = "off"
 
-        self.fields['species_'].widget.attrs['class'] = "autocomplete"
-        self.fields['species_'].widget.attrs['autocomplete'] = "off"
+        self.fields['species'].widget.attrs['class'] = "autocomplete"
+        self.fields['species'].widget.attrs['autocomplete'] = "off"
 
-        self.fields['subspecies_'].widget.attrs['class'] = "autocomplete"
-        self.fields['subspecies_'].widget.attrs['autocomplete'] = "off"
+        self.fields['subspecies'].widget.attrs['class'] = "autocomplete"
+        self.fields['subspecies'].widget.attrs['autocomplete'] = "off"
 
-    # owner_ = forms.CharField(label='Владелец', max_length=40)
-    species_ = forms.CharField(label='Вид', max_length=40)
-    subspecies_ = forms.CharField(label='Порода', max_length=40)
+    owner = forms.CharField(label=_('Владелец'), max_length=50)
+    species = forms.CharField(label=_('Вид'), max_length=40)
+    subspecies = forms.CharField(label=_('Порода'), max_length=40)
 
     class Meta:
         model = Animal
-        fields = ('owner', 'name', 'birth', 'gender', 'species_', 'subspecies_',
-                  'aggressive', 'identification', 'identification_value',
-                  'is_sterilization', 'is_die',)
+        fields = '__all__'
 
-    # def clean_owner_(self):
-    #     owner_str = self.cleaned_data['owner_']
-    #     try:
-    #         owner_obj = Owner.objects.get(fio=owner_str)
-    #     except Owner.DoesNotExist:
-    #         raise forms.ValidationError('Owner not exist')
-    #     owner = owner_obj
-    #     return owner_str
+    def clean_owner(self):
+        data_str = self.cleaned_data['owner']
+        try:
+            data_obj = Owner.objects.get(fio=data_str)
+        except Owner.DoesNotExist:
+            raise forms.ValidationError(_('Владелец не существует'))
+        return data_obj
 
-    def clean_species_(self):
-        data = self.cleaned_data['species_']
-        logger.info(data)
-        obj, c = Species.objects.get_or_create(value=data)
-        return obj.pk
+    def clean_species(self):
+        data = self.cleaned_data['species']
+        data_obj, c = Species.objects.get_or_create(value=data.capitalize())
+        return data_obj
 
-    def clean_subspecies_(self):
-        data = self.cleaned_data['subspecies_']
-        data_2 = self.cleaned_data['species_']
-        obj, c = Subspecies.objects.get_or_create(value=data, species_id=data_2)
-        return obj.pk
+    def clean_subspecies(self):
+        data = self.cleaned_data['subspecies']
+        data_2 = self.cleaned_data['species']
+        obj, c = Subspecies.objects.get_or_create(value=data.capitalize(), species=data_2)
+        return obj
 
 
 class OwnerForm(forms.ModelForm):

@@ -57,15 +57,31 @@
             let month = now.diff(birth, 'month') % 12;
             return ((year) ? getRusStringYear(year) : '') + ' ' + getRusStringMonth(month);
         });
-        $(".autocomplete[name='species_']").autocomplete({
-            source: "{% url 'vet:ajax-autocomplete-species' %}",
-            minLength: 1,
-
+        $(".autocomplete[name='owner']").autocomplete({
+            source: "{% url 'vet:ajax-autocomplete-owner' %}",
+            minLength: 0,
+        }).focus(function () {
+            $(this).autocomplete("search", $(this).val());
         });
-        $(".autocomplete[name='subspecies_']").autocomplete({
-            source: "{% url 'vet:ajax-autocomplete-subspecies' %}",
-            minLength: 1,
-            //TODO Add species_ in ajax request
+
+        $(".autocomplete[name='species']").autocomplete({
+            source: "{% url 'vet:ajax-autocomplete-species' %}",
+            minLength: 0,
+        }).focus(function () {
+            $(this).autocomplete("search", $(this).val());
+        });
+
+        $(".autocomplete[name='subspecies']").autocomplete({
+            source: function (request, response) {
+                $.getJSON("{% url 'vet:ajax-autocomplete-subspecies' %}",
+                    {
+                        term: request.term,
+                        term_2: $(".autocomplete[name='species']").val()
+                    }, response);
+            },
+            minLength: 0,
+        }).focus(function () {
+            $(this).autocomplete("search", $(this).val());
         });
     });
 </script>
