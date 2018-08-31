@@ -25,7 +25,7 @@ SECRET_KEY = 'g9k)6((ww4^tw&k)!n459*_p@j%(4u3z=ik^)d$nf%aepm%lc@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['muchkom.pythonanywhere.com', '127.0.0.1']
 
 # Application definition
 
@@ -155,18 +155,21 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-STATICFILES_DIRS = [
-    'static'
-]
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 MEDIA_URL = '/media/'
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
+
 LANGUAGES = (
     ('en', _('English')),
     ('ru', _('Russian')),
