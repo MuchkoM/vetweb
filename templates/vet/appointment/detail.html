@@ -4,5 +4,4 @@
     {% include 'vet/appointment/appointment_detail_template.html' %}
     <a href="{% url 'vet:appointment-update' object.pk %}"> Update appointment</a>
     <a href="{% url 'vet:appointment-delete' object.pk %}"> Delete appointment</a>
-</form>
 {% endblock %}
