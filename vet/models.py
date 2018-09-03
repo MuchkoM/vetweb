@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext as _
+from datetime import date
 
 
 class Owner(models.Model):
@@ -18,12 +19,14 @@ class Owner(models.Model):
 
 class ValuesModel(models.Model):
     value = models.CharField(max_length=40)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.value}'
 
     class Meta:
         abstract = True
+        ordering = ["date"]
 
 
 class Species(ValuesModel):
@@ -75,7 +78,7 @@ class Animal(models.Model):
     name = models.CharField(verbose_name=_('Кличка'),
                             max_length=50)
     date = models.DateField(verbose_name=_('Дата рождения'),
-                            blank=False)
+                            blank=False, default=date.today)
     gender = models.BooleanField(verbose_name=_('Пол'),
                                  choices=GENDER_CHOICE,
                                  default=GENDER_MALE)
@@ -112,7 +115,7 @@ class Animal(models.Model):
 
 class AnimalProcedures(models.Model):
     animal = models.ForeignKey(Animal, verbose_name=_('Животное'), on_delete=models.CASCADE)
-    date = models.DateField(verbose_name=_('Дата прививки'), blank=False)
+    date = models.DateField(verbose_name=_('Дата прививки'), blank=False, default=date.today)
     procedure_type = None
 
     def __str__(self):
@@ -120,6 +123,7 @@ class AnimalProcedures(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ["date"]
 
 
 class Vaccination(ValuesModel):

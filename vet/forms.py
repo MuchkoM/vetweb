@@ -97,6 +97,7 @@ class AnimalProceduresForm(forms.ModelForm):
     def clean_animal(self):
         data_str = self.cleaned_data['animal']
         try:
+            #todo Need do normal search  can be bad
             data_obj = models.Animal.objects.get(name=data_str)
         except models.Animal.DoesNotExist:
             raise forms.ValidationError(_('Животного не существует'))
