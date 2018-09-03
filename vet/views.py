@@ -10,10 +10,7 @@ import json
 class CreateViewPk(generic.CreateView):
     def get_initial(self):
         initial = super().get_initial()
-        try:
-            initial['pk_key'] = self.kwargs['pk']
-        except KeyError:
-            pass
+        initial['_pk'] = self.kwargs.get('pk', None)
         return initial
 
 

@@ -19,18 +19,17 @@ class AnimalForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         obj = kwargs['instance']
+        pk = self.initial.get('_pk', None)
+
+        if pk:
+            owner = get_object_or_404(models.Owner, pk=pk)
+            self.initial['owner'] = owner.fio
+            self.fields['owner'].disabled = True
+
         if obj is not None:
             self.initial['owner'] = obj.owner.fio
             self.initial['species'] = obj.species.value
             self.initial['subspecies'] = obj.subspecies.value
-
-        if obj is None:
-            try:
-                owner = get_object_or_404(models.Owner, pk=self.initial['pk_key'])
-                self.initial['owner'] = owner.fio
-                self.fields['owner'].disabled = True
-            except KeyError:
-                pass
 
         self.fields['owner'].widget.attrs['class'] = "autocomplete"
         self.fields['owner'].widget.attrs['autocomplete'] = "off"
@@ -76,11 +75,12 @@ class AnimalProceduresForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         obj = kwargs['instance']
-        pk = self.initial.get('pk_key', None)
+        pk = self.initial.get('_pk', None)
 
         if pk:
             animal = get_object_or_404(models.Animal, pk=pk)
             self.initial['animal'] = animal.name
+            self.fields['animal'].disabled = True
 
         if obj is not None:
             self.initial['animal'] = obj.animal.name
