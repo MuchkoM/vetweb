@@ -1,6 +1,6 @@
 <strong>Владелец: </strong><a href="{% url 'vet:owner-detail' object.owner.pk %}">{{ object.owner }}</a><br>
 <strong>Животное: </strong><a href="{% url 'vet:animal-detail' object.pk %}">{{ object.name }}</a><br>
-<strong>Возраст: </strong><i class="age">{{object.birth}}</i><br>
+<strong>Возраст: </strong><i class="age">{{object.date}}</i><br>
 <strong>Пол: </strong> {{ object.get_gender_display}}<br>
 <strong>Вид: </strong>{{ object.species.value}}<br>
 <strong>Порода: </strong>{{ object.subspecies.value }}<br>

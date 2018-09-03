@@ -47,6 +47,13 @@ $(function () {
         $(this).autocomplete("search", $(this).val());
     });
 
+    $(".autocomplete[name='animal']").autocomplete({
+        source: autocomplete_animal,
+        minLength: 0,
+    }).focus(function () {
+        $(this).autocomplete("search", $(this).val());
+    });
+
     $(".autocomplete[name='species']").autocomplete({
         source: autocomplete_species,
         minLength: 0,
@@ -54,13 +61,19 @@ $(function () {
         $(this).autocomplete("search", $(this).val());
     });
 
+    $(".autocomplete[name='vaccination']").autocomplete({
+        source: autocomplete_vaccination,
+        minLength: 0,
+    }).focus(function () {
+        $(this).autocomplete("search", $(this).val());
+    });
+
     $(".autocomplete[name='subspecies']").autocomplete({
         source: function (request, response) {
-            $.getJSON(autocomplete_subspecies,
-                {
-                    term: request.term,
-                    term_2: $(".autocomplete[name='species']").val()
-                }, response);
+            $.getJSON(autocomplete_subspecies, {
+                term: request.term,
+                term_2: $(".autocomplete[name='species']").val()
+            }, response);
         },
         minLength: 0,
     }).focus(function () {

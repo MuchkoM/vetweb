@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Информация об вакцинации{% endblock %}
+{% block body %}
+    {% include 'vet/prevention/detail_template.html' %}
+    <a href="{% url 'vet:prevention-update' object.pk %}"> Обновить информацию об вакцине</a>
+    <a href="{% url 'vet:prevention-delete' object.pk %}"> Удалить вакцинацию</a>
+{% endblock %}

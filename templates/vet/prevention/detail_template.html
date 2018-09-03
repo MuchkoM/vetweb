@@ -1,0 +1,4 @@
+<strong>Животное: </strong><a href="{% url 'vet:animal-detail' object.animal.pk %}">{{ object.animal.name }}</a><br>
+<strong>Дата вакцинации: </strong> {{ object.date}}<br>
+<strong>Вакцина: </strong> {{ object.vaccination}}<br>
+<strong>Тип прививки: </strong> {{ object.get_type_vaccination_display}}<br>

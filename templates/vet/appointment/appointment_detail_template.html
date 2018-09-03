@@ -1,6 +1,0 @@
-<a href="{% url 'vet:owner-detail' object.animal.owner.pk %}">{{ object.animal.owner }}</a><br>
-<a href="{% url 'vet:animal-detail' object.animal.pk %}">{{ object.animal }}</a><br>
-<a href="{% url 'vet:appointment-detail' object.pk %}">{{ object }}</a><br>
-{{ object.appointment_date }}<br>
-{{ object.get_type_display }}<br>
-{{ object.description }}<br>

@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
-{% block title %}Owner detail{% endblock %}
+{% block title %}Информация о владельце{% endblock %}
 {% block body %}
-    {% include 'vet/owner/owner_detail_template.html' %}
-    <a href="{% url 'vet:animal-create-owner' object.pk %}"> Add animal to owner</a>
-    <a href="{% url 'vet:owner-update' object.pk %}"> Update current owner</a>
-    <a href="{% url 'vet:owner-delete' object.pk %}"> Delete current owner</a>
-    <br>
-    {% for animal in object.animal_set.all %}
-        <a href="{% url 'vet:animal-detail' animal.pk %}"> {{ animal }}</a><br>
-    {% endfor %}
-
+    {% include 'vet/owner/detail_template.html' %}
+    <a href="{% url 'vet:animal-create-owner' object.pk %}"> Добавить животное владельцу</a>
+    <a href="{% url 'vet:owner-update' object.pk %}">Обновить информацию о владельце</a>
+    <a href="{% url 'vet:owner-delete' object.pk %}">Удалить владельца из базы</a>
+    <div>
+        {% for animal in object.animal_set.all %}
+            <a href="{% url 'vet:animal-detail' animal.pk %}"> {{ animal }}</a><br>
+        {% endfor %}
+    </div>
 {% endblock %}

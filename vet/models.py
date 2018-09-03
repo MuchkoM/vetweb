@@ -16,15 +16,21 @@ class Owner(models.Model):
         return f'{self.fio}'
 
 
-class Species(models.Model):
+class ValuesModel(models.Model):
     value = models.CharField(max_length=40)
 
     def __str__(self):
         return f'{self.value}'
 
+    class Meta:
+        abstract = True
 
-class Subspecies(models.Model):
-    value = models.CharField(max_length=40)
+
+class Species(ValuesModel):
+    pass
+
+
+class Subspecies(ValuesModel):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -68,8 +74,8 @@ class Animal(models.Model):
                               on_delete=models.CASCADE)
     name = models.CharField(verbose_name=_('Кличка'),
                             max_length=50)
-    birth = models.DateField(verbose_name=_('Дата рождения'),
-                             blank=False)
+    date = models.DateField(verbose_name=_('Дата рождения'),
+                            blank=False)
     gender = models.BooleanField(verbose_name=_('Пол'),
                                  choices=GENDER_CHOICE,
                                  default=GENDER_MALE)
@@ -104,18 +110,57 @@ class Animal(models.Model):
         return f'{self.species} {self.name}'
 
 
-class Appointment(models.Model):
-    APPOINTMENT_CHOICE = (
-        ('S', _('Cтационар')),
-        ('A', _('Амбулатор'))
-    )
-    animal = models.ForeignKey(Animal, on_delete=models.CASCADE)
-    appointment_date = models.DateField(blank=False)
-    type = models.CharField(max_length=1, choices=APPOINTMENT_CHOICE)
-    description = models.CharField(max_length=1000)
-
-    def get_absolute_url(self):
-        return reverse('vet:appointment-detail', kwargs={'pk': self.pk})
+class AnimalProcedures(models.Model):
+    animal = models.ForeignKey(Animal, verbose_name=_('Животное'), on_delete=models.CASCADE)
+    date = models.DateField(verbose_name=_('Дата прививки'), blank=False)
+    procedure_type = None
 
     def __str__(self):
-        return f'{self.appointment_date}'
+        return f'{self.procedure_type} {self.date}'
+
+    class Meta:
+        abstract = True
+
+
+class Vaccination(ValuesModel):
+    pass
+
+
+class Diagnosis(ValuesModel):
+    pass
+
+
+class Prevention(AnimalProcedures):
+    procedure_type = _('Прививка')
+    TYPE_FIRST = 'f'
+    TYPE_AGAIN = 'a'
+    TYPE_REPEAT = 'r'
+    TYPE_CHOICE = (
+        (TYPE_FIRST, _('Первичная')),
+        (TYPE_AGAIN, _('Повторная')),
+        (TYPE_REPEAT, _('Ревакцинация')),
+    )
+    vaccination = models.ForeignKey(Vaccination, verbose_name=_('Прививка'),
+                                    on_delete=models.CASCADE)
+    type_vaccination = models.CharField(verbose_name=_('Тип прививки'),
+                                        max_length=1,
+                                        choices=TYPE_CHOICE,
+                                        default=TYPE_FIRST)
+
+    def get_absolute_url(self):
+        return reverse('vet:prevention-detail', kwargs={'pk': self.pk})
+
+
+class Therapy(AnimalProcedures):
+    procedure_type = _('Терапия')
+    THERAPY_CLINIC = 'c'
+    THERAPY_OPERATIVE = 'o'
+    THERAPY_TYPE = (
+        (THERAPY_CLINIC, _('Амбулатория')),
+        (THERAPY_OPERATIVE, _('Хирургия')),
+    )
+    type = models.CharField(max_length=1, choices=THERAPY_TYPE, default=THERAPY_CLINIC)
+    symptomatic = models.CharField(verbose_name=_('Симптомы'), max_length=100, blank=True)
+    labs = models.CharField(verbose_name=_('Исследования'), max_length=100, blank=True)
+    diagnosis = models.ForeignKey(Diagnosis, verbose_name=_('Диагноз'),
+                                  on_delete=models.CASCADE)
