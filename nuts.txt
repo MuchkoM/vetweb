@@ -3,5 +3,6 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py loaddata data.json
 python manage.py dumpdata > data.json
+python manage.py collectstatic
 admin@admin.admin
 admin

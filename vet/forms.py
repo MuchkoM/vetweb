@@ -84,7 +84,6 @@ class AnimalProceduresForm(forms.ModelForm):
 
         if obj is not None:
             self.initial['animal'] = obj.animal.name
-            self.initial['vaccination'] = obj.vaccination.value
             self.fields['animal'].disabled = True
 
         self.fields['date'].widget.attrs['class'] = "datepicker"
@@ -112,6 +111,10 @@ class PreventionForm(AnimalProceduresForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        obj = kwargs['instance']
+        if obj is not None:
+            self.initial['vaccination'] = obj.vaccination.value
+
         self.fields['vaccination'].widget.attrs['class'] = "autocomplete"
         self.fields['vaccination'].widget.attrs['autocomplete'] = "off"
 
@@ -120,4 +123,25 @@ class PreventionForm(AnimalProceduresForm):
     def clean_vaccination(self):
         data = self.cleaned_data['vaccination']
         data_obj, c = models.Vaccination.objects.get_or_create(value=data.capitalize())
+        return data_obj
+
+
+class TherapyForm(AnimalProceduresForm):
+    class Meta:
+        model = models.Therapy
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        obj = kwargs['instance']
+        if obj is not None:
+            self.initial['diagnosis'] = obj.diagnosis.value
+        self.fields['diagnosis'].widget.attrs['class'] = "autocomplete"
+        self.fields['diagnosis'].widget.attrs['autocomplete'] = "off"
+
+    diagnosis = forms.CharField(label=_('Диагноз'), max_length=40)
+
+    def clean_diagnosis(self):
+        data = self.cleaned_data['diagnosis']
+        data_obj, c = models.Diagnosis.objects.get_or_create(value=data.capitalize())
         return data_obj

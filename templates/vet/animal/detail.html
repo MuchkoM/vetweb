@@ -4,9 +4,16 @@
     {% include 'vet/animal/detail_template.html' %}
     <a href="{% url 'vet:animal-update' object.pk %}"> Изменить информацию о животном</a>
     <a href="{% url 'vet:prevention-create-animal' object.pk %}"> Добавить вакцинацию</a>
+    <a href="{% url 'vet:therapy-create-animal' object.pk %}"> Добавить терапию</a>
     <a href="{% url 'vet:animal-delete' object.pk %}"> Удалить животное</a>
     <br><strong>Вакцинации: </strong> <br>
     {% for prevention in object.prevention_set.all %}
-        <a href="{% url 'vet:prevention-detail' prevention.pk %}"> {{ prevention.data }} {{ prevention.vaccination.value }}</a><br>
+        <a href="{% url 'vet:prevention-detail' prevention.pk %}"> {{ prevention.data }} {{ prevention.vaccination.value }}</a>
+        <br>
+    {% endfor %}
+    <strong>Терапия: </strong> <br>
+    {% for therapy in object.therapy_set.all %}
+        <a href="{% url 'vet:therapy-detail' therapy.pk %}"> {{ therapy.data }} {{ therapy.diagnosis.value }}</a>
+        <br>
     {% endfor %}
 {% endblock %}

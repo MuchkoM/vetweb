@@ -131,7 +131,7 @@ class Diagnosis(ValuesModel):
 
 
 class Prevention(AnimalProcedures):
-    procedure_type = _('Прививка')
+    procedure_type = _('Вакцинация')
     TYPE_FIRST = 'f'
     TYPE_AGAIN = 'a'
     TYPE_REPEAT = 'r'
@@ -159,8 +159,11 @@ class Therapy(AnimalProcedures):
         (THERAPY_CLINIC, _('Амбулатория')),
         (THERAPY_OPERATIVE, _('Хирургия')),
     )
-    type = models.CharField(max_length=1, choices=THERAPY_TYPE, default=THERAPY_CLINIC)
+    type = models.CharField(max_length=1, verbose_name=_('Тип терапии'), choices=THERAPY_TYPE, default=THERAPY_CLINIC)
     symptomatic = models.CharField(verbose_name=_('Симптомы'), max_length=100, blank=True)
     labs = models.CharField(verbose_name=_('Исследования'), max_length=100, blank=True)
     diagnosis = models.ForeignKey(Diagnosis, verbose_name=_('Диагноз'),
                                   on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse('vet:therapy-detail', kwargs={'pk': self.pk})

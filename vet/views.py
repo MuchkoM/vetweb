@@ -101,11 +101,36 @@ class PreventionView:
         success_url = reverse_lazy('vet:prevention-list')
 
 
+class TherapyView:
+    class Create(CreateViewPk):
+        form_class = forms.TherapyForm
+        template_name = 'vet/therapy/form.html'
+
+    class Detail(generic.DetailView):
+        model = models.Therapy
+        template_name = 'vet/therapy/detail.html'
+
+    class List(generic.ListView):
+        model = models.Therapy
+        template_name = 'vet/therapy/list.html'
+
+    class Update(generic.UpdateView):
+        form_class = forms.TherapyForm
+        model = models.Therapy
+        template_name = 'vet/therapy/form.html'
+
+    class Delete(generic.DeleteView):
+        model = models.Therapy
+        template_name = 'vet/generic/generic_confirm_delete.html'
+        success_url = reverse_lazy('vet:therapy-list')
+
+
 class Ajax:
     class Species(AjaxRequest):
         @staticmethod
         def get_queryset_value(kwarg):
-            return models.Species.objects.filter(value__icontains=kwarg['term'])[:10].values_list('value', flat=True)
+            return models.Species.objects.filter(
+                value__icontains=kwarg['term'])[:10].values_list('value', flat=True)
 
     class Subspecies(AjaxRequest):
         @staticmethod
@@ -116,15 +141,23 @@ class Ajax:
     class Owner(AjaxRequest):
         @staticmethod
         def get_queryset_value(kwarg):
-            return models.Owner.objects.filter(fio__icontains=kwarg['term'])[:10].values_list('fio', flat=True)
+            return models.Owner.objects.filter(
+                fio__icontains=kwarg['term'])[:10].values_list('fio', flat=True)
 
     class Animal(AjaxRequest):
         @staticmethod
         def get_queryset_value(kwarg):
-            return models.Animal.objects.filter(name__icontains=kwarg['term'])[:10].values_list('name', flat=True)
+            return models.Animal.objects.filter(
+                name__icontains=kwarg['term'])[:10].values_list('name', flat=True)
 
     class Vaccination(AjaxRequest):
         @staticmethod
         def get_queryset_value(kwarg):
-            return models.Vaccination.objects.filter(value__icontains=kwarg['term'])[:10].values_list('value',
-                                                                                                      flat=True)
+            return models.Vaccination.objects.filter(
+                value__icontains=kwarg['term'])[:10].values_list('value', flat=True)
+
+    class Diagnosis(AjaxRequest):
+        @staticmethod
+        def get_queryset_value(kwarg):
+            return models.Diagnosis.objects.filter(
+                value__icontains=kwarg['term'])[:10].values_list('value', flat=True)

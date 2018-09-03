@@ -41,28 +41,35 @@ $(function () {
         return ((year) ? getRusStringYear(year) : '') + ' ' + getRusStringMonth(month);
     });
     $(".autocomplete[name='owner']").autocomplete({
-        source: autocomplete_owner,
+        source: ajax_owner,
         minLength: 0,
     }).focus(function () {
         $(this).autocomplete("search", $(this).val());
     });
 
     $(".autocomplete[name='animal']").autocomplete({
-        source: autocomplete_animal,
+        source: ajax_animal,
         minLength: 0,
     }).focus(function () {
         $(this).autocomplete("search", $(this).val());
     });
 
     $(".autocomplete[name='species']").autocomplete({
-        source: autocomplete_species,
+        source: ajax_species,
         minLength: 0,
     }).focus(function () {
         $(this).autocomplete("search", $(this).val());
     });
 
     $(".autocomplete[name='vaccination']").autocomplete({
-        source: autocomplete_vaccination,
+        source: ajax_vaccination,
+        minLength: 0,
+    }).focus(function () {
+        $(this).autocomplete("search", $(this).val());
+    });
+
+    $(".autocomplete[name='diagnosis']").autocomplete({
+        source: ajax_diagnosis,
         minLength: 0,
     }).focus(function () {
         $(this).autocomplete("search", $(this).val());
@@ -70,7 +77,7 @@ $(function () {
 
     $(".autocomplete[name='subspecies']").autocomplete({
         source: function (request, response) {
-            $.getJSON(autocomplete_subspecies, {
+            $.getJSON(ajax_subspecies, {
                 term: request.term,
                 term_2: $(".autocomplete[name='species']").val()
             }, response);
