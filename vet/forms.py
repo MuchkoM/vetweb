@@ -1,6 +1,7 @@
 from django import forms
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext as _
+
 from . import models
 
 
@@ -10,7 +11,15 @@ class OwnerForm(forms.ModelForm):
         fields = "__all__"
 
 
-class AnimalForm(forms.ModelForm):
+class ParamForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.exist_obj = kwargs['instance']
+        self.creator_pk = self.initial.pop('_pk', None)
+
+
+class AnimalForm(ParamForm):
     class Meta:
         model = models.Animal
         fields = '__all__'
@@ -18,18 +27,15 @@ class AnimalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        obj = kwargs['instance']
-        pk = self.initial.get('_pk', None)
-
-        if pk:
-            owner = get_object_or_404(models.Owner, pk=pk)
+        if self.creator_pk is not None:
+            owner = get_object_or_404(models.Owner, pk=self.creator_pk)
             self.initial['owner'] = owner.fio
             self.fields['owner'].disabled = True
 
-        if obj is not None:
-            self.initial['owner'] = obj.owner.fio
-            self.initial['species'] = obj.species.value
-            self.initial['subspecies'] = obj.subspecies.value
+        if self.exist_obj is not None:
+            self.initial['owner'] = self.exist_obj.owner.fio
+            self.initial['species'] = self.exist_obj.species.value
+            self.initial['subspecies'] = self.exist_obj.subspecies.value
 
         self.fields['owner'].widget.attrs['class'] = "autocomplete"
         self.fields['owner'].widget.attrs['autocomplete'] = "off"
@@ -70,20 +76,17 @@ class AnimalForm(forms.ModelForm):
         return obj
 
 
-class AnimalProceduresForm(forms.ModelForm):
+class AnimalProceduresForm(ParamForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        obj = kwargs['instance']
-        pk = self.initial.get('_pk', None)
-
-        if pk:
-            animal = get_object_or_404(models.Animal, pk=pk)
+        if self.creator_pk is not None:
+            animal = get_object_or_404(models.Animal, pk=self.creator_pk)
             self.initial['animal'] = animal.name
             self.fields['animal'].disabled = True
 
-        if obj is not None:
-            self.initial['animal'] = obj.animal.name
+        if self.exist_obj is not None:
+            self.initial['animal'] = self.exist_obj.animal.name
             self.fields['animal'].disabled = True
 
         self.fields['date'].widget.attrs['class'] = "datepicker"
@@ -97,7 +100,9 @@ class AnimalProceduresForm(forms.ModelForm):
     def clean_animal(self):
         data_str = self.cleaned_data['animal']
         try:
-            #todo Need do normal search  can be bad
+            # todo Need do normal search  can be bad
+            # todo Если имя не уникально, get возвращает более одного объекта
+            # todo нужно что-то придумать
             data_obj = models.Animal.objects.get(name=data_str)
         except models.Animal.DoesNotExist:
             raise forms.ValidationError(_('Животного не существует'))
@@ -112,9 +117,8 @@ class PreventionForm(AnimalProceduresForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        obj = kwargs['instance']
-        if obj is not None:
-            self.initial['vaccination'] = obj.vaccination.value
+        if self.exist_obj is not None:
+            self.initial['vaccination'] = self.exist_obj.vaccination.value
 
         self.fields['vaccination'].widget.attrs['class'] = "autocomplete"
         self.fields['vaccination'].widget.attrs['autocomplete'] = "off"
@@ -134,9 +138,8 @@ class TherapyForm(AnimalProceduresForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        obj = kwargs['instance']
-        if obj is not None:
-            self.initial['diagnosis'] = obj.diagnosis.value
+        if self.exist_obj is not None:
+            self.initial['diagnosis'] = self.exist_obj.diagnosis.value
         self.fields['diagnosis'].widget.attrs['class'] = "autocomplete"
         self.fields['diagnosis'].widget.attrs['autocomplete'] = "off"
 

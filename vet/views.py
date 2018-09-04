@@ -1,16 +1,20 @@
+import json
+
 from django.db.models import QuerySet
-from django.views import generic
 from django.http import HttpResponse
 from django.urls import reverse_lazy
-from . import models
+from django.views import generic
+
 from . import forms
-import json
+from . import models
 
 
 class CreateViewPk(generic.CreateView):
     def get_initial(self):
         initial = super().get_initial()
-        initial['_pk'] = self.kwargs.get('pk', None)
+        pk = self.kwargs.get('pk', None)
+        if pk:
+            initial['_pk'] = pk
         return initial
 
 

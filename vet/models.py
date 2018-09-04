@@ -1,7 +1,8 @@
+from datetime import date
+
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext as _
-from datetime import date
 
 
 class Owner(models.Model):
@@ -105,6 +106,14 @@ class Animal(models.Model):
     is_die = models.BooleanField(verbose_name=_('Погибло'),
                                  choices=YES_NO_CHOICE,
                                  default=NO)
+
+    def get_unique_str(self):
+        return f'{self.name}|{self.owner.fio}'
+
+    @staticmethod
+    def get_animal_by_str(s: str):
+        ani_name, fio = s.split('|')
+        return Animal.objects.get(name=ani_name, owner__fio=fio)
 
     def get_absolute_url(self):
         return reverse('vet:animal-detail', kwargs={'pk': self.pk})
