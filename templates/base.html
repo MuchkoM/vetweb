@@ -1,15 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Satisfy'>
     <link rel="stylesheet" href="{% static 'vet/style.css' %}"/>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/ru.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/jquery-ui-i18n.min.js"></script>
@@ -23,7 +23,7 @@
         let ajax_vaccination = "{% url 'vet:ajax-vaccination' %}";
     </script>
     <meta charset="UTF-8">
-    <title> {% block title %}Sound cloud {% endblock %}</title>
+    <title> {% block title %}WetVeb{% endblock %}</title>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -63,12 +63,12 @@
                     </a>
                 </li>
             </ul>
-            <!--<form class="navbar-form navbar-left" role="search" method="get" action="#">
-                      <div class="form-group">
-                          <input type="text" class="form-control" name="q" value="">
-                      </div>
-                      <button type="submit" class="btn btn-default">Search</button>
-                  </form>-->
+            {#            <form class="navbar-form navbar-left" role="search" method="get" action="#">#}
+            {#                      <div class="form-group">#}
+            {#                          <input type="text" class="form-control" name="q" value="">#}
+            {#                      </div>#}
+            {#                      <button type="submit" class="btn btn-default">Search</button>#}
+            {#                  </form>#}
             <ul class="nav navbar-nav navbar-right">
                 <li class="">
                     <a href="{% url 'vet:owner-create' %}">
@@ -94,18 +94,18 @@
                         Новая терапия
                     </a>
                 </li>
-                <li class="">
-                    <a href="{% url 'account:user-register' %}">
-                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;
-                        Login
-                    </a>
-                </li>
-                <li class="">
-                    <a href="{% url 'account:user-logout' %}">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;
-                        Logout
-                    </a>
-                </li>
+                {#                <li class="">#}
+                {#                    <a href="{% url 'account:user-register' %}">#}
+                {#                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;#}
+                {#                        Login#}
+                {#                    </a>#}
+                {#                </li>#}
+                {#                <li class="">#}
+                {#                    <a href="{% url 'account:user-logout' %}">#}
+                {#                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;#}
+                {#                        Logout#}
+                {#                    </a>#}
+                {#                </li>#}
                 <li class="">
                     <a href="{% url "admin:index" %}">
                         <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&nbsp;
@@ -116,7 +116,22 @@
         </div>
     </div>
 </nav>
-{% block body %}
-{% endblock %}
+<div class="container">
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                {% block back_button %}
+                    <a href="{{ request.META.HTTP_REFERER|escape }}"
+                       class="btn btn-success"
+                       role="button">
+                        Назад
+                    </a>
+                {% endblock %}
+                {% block panel_title %}WetVeb{% endblock %}</div>
+            <div class="panel-body">{% block body %}{% endblock %}</div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

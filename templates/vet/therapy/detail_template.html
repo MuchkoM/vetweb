@@ -1,6 +1,0 @@
-<strong>Животное: </strong><a href="{% url 'vet:animal-detail' object.animal.pk %}">{{ object.animal.name }}</a><br>
-<strong>Дата терапии: </strong> {{ object.date}}<br>
-<strong>Тип терапии: </strong> {{ object.get_type_display}}<br>
-<strong>Симптомы: </strong> {{ object.symptomatic}}<br>
-<strong>Исследования: </strong> {{ object.labs}}<br>
-<strong>Диагноз: </strong> {{ object.diagnosis}}<br>

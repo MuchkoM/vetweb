@@ -19,6 +19,7 @@ class CreateViewPk(generic.CreateView):
 
 
 class AjaxRequest:
+    # todo Аякс не реагирует на символы в нижнем регистре при приеме
     @classmethod
     def get_ajax(cls, request):
         if request.is_ajax():
@@ -36,7 +37,7 @@ class AjaxRequest:
 class OwnerView:
     class Create(generic.CreateView):
         form_class = forms.OwnerForm
-        template_name = 'vet/owner/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Detail(generic.DetailView):
         model = models.Owner
@@ -49,7 +50,7 @@ class OwnerView:
     class Update(generic.UpdateView):
         form_class = forms.OwnerForm
         model = models.Owner
-        template_name = 'vet/owner/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Delete(generic.DeleteView):
         model = models.Owner
@@ -60,7 +61,7 @@ class OwnerView:
 class AnimalView:
     class Create(CreateViewPk):
         form_class = forms.AnimalForm
-        template_name = 'vet/animal/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Detail(generic.DetailView):
         model = models.Animal
@@ -73,7 +74,7 @@ class AnimalView:
     class Update(generic.UpdateView):
         form_class = forms.AnimalForm
         model = models.Animal
-        template_name = 'vet/animal/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Delete(generic.DeleteView):
         model = models.Animal
@@ -84,7 +85,7 @@ class AnimalView:
 class PreventionView:
     class Create(CreateViewPk):
         form_class = forms.PreventionForm
-        template_name = 'vet/prevention/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Detail(generic.DetailView):
         model = models.Prevention
@@ -97,7 +98,7 @@ class PreventionView:
     class Update(generic.UpdateView):
         form_class = forms.PreventionForm
         model = models.Prevention
-        template_name = 'vet/prevention/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Delete(generic.DeleteView):
         model = models.Prevention
@@ -108,7 +109,7 @@ class PreventionView:
 class TherapyView:
     class Create(CreateViewPk):
         form_class = forms.TherapyForm
-        template_name = 'vet/therapy/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Detail(generic.DetailView):
         model = models.Therapy
@@ -121,7 +122,7 @@ class TherapyView:
     class Update(generic.UpdateView):
         form_class = forms.TherapyForm
         model = models.Therapy
-        template_name = 'vet/therapy/form.html'
+        template_name = 'vet/generic/generic_form.html'
 
     class Delete(generic.DeleteView):
         model = models.Therapy

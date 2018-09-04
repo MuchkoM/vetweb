@@ -1,13 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}Информация о владельце{% endblock %}
+{% block panel_title %}{% block title %}Информация о владельце{% endblock %}{% endblock %}
+{% block back_button %}
+    <a href="{% url 'vet:owner-list' %}" class="btn btn-success" role="button">
+        Список владельцев
+    </a>
+{% endblock %}
 {% block body %}
-    {% include 'vet/owner/detail_template.html' %}
-    <a href="{% url 'vet:animal-create-owner' object.pk %}"> Добавить животное владельцу</a>
-    <a href="{% url 'vet:owner-update' object.pk %}">Обновить информацию о владельце</a>
-    <a href="{% url 'vet:owner-delete' object.pk %}">Удалить владельца из базы</a>
-    <div>
-        {% for animal in object.animal_set.all %}
-            <a href="{% url 'vet:animal-detail' animal.pk %}"> {{ animal }}</a><br>
-        {% endfor %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a href="{% url 'vet:owner-update' object.pk %}" class="btn btn-warning" role="button">
+                Обновить информацию о владельце
+            </a>
+            <a href="{% url 'vet:owner-delete' object.pk %}" class="btn btn-danger" role="button">
+                Удалить владельца из базы
+            </a>
+        </div>
+        <div class="panel-body">
+            {% include 'vet/owner/detail_templete_full.html' %}
+        </div>
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a href="{% url 'vet:animal-create-owner' object.pk %}" class="btn btn-success" role="button">
+                Добавить животное владельцу
+            </a>
+            Список животных владельца
+        </div>
+        <div class="panel-body">
+            {% include 'vet/animal/list_template_preview.html' with object_list=object.animal_set.all %}
+        </div>
     </div>
 {% endblock %}

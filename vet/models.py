@@ -6,6 +6,9 @@ from django.utils.translation import ugettext as _
 
 
 class Owner(models.Model):
+    class Meta:
+        unique_together = ('fio', 'address',)
+
     fio = models.CharField(verbose_name=_('ФИО'), max_length=50)
     address = models.CharField(verbose_name=_('Адрес'), max_length=70, blank=True)
     phone = models.CharField(verbose_name=_('Телефон'), max_length=14, blank=True)
@@ -78,17 +81,18 @@ class Animal(models.Model):
                               on_delete=models.CASCADE)
     name = models.CharField(verbose_name=_('Кличка'),
                             max_length=50)
-    date = models.DateField(verbose_name=_('Дата рождения'),
-                            blank=False, default=date.today)
-    gender = models.BooleanField(verbose_name=_('Пол'),
-                                 choices=GENDER_CHOICE,
-                                 default=GENDER_MALE)
     species = models.ForeignKey(Species, verbose_name=_('Вид'),
                                 on_delete=models.DO_NOTHING)
     subspecies = models.ForeignKey(Subspecies,
                                    verbose_name=_('Порода'),
                                    on_delete=models.DO_NOTHING,
                                    null=True)
+    date = models.DateField(verbose_name=_('Дата рождения'),
+                            blank=False, default=date.today)
+    gender = models.BooleanField(verbose_name=_('Пол'),
+                                 choices=GENDER_CHOICE,
+                                 default=GENDER_MALE)
+
     aggressive = models.CharField(verbose_name=_('Агрессивность'),
                                   max_length=1,
                                   choices=AGGRESSIVE_CHOICE,

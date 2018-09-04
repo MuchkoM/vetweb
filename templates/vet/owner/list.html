@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Список всех владельцев{% endblock %}
+{% block panel_title %}{% block title %}Список всех владельцев{% endblock %}{% endblock %}
+{% block back_button %}
+    <a href="{% url 'vet:owner-create' %}" class="btn btn-success" role="button">
+        Добавить владельца
+    </a>
+{% endblock %}
 {% block body %}
-    {% for object in object_list %}
-        <strong>Владелец: </strong><a href="{% url 'vet:owner-detail' object.pk %}">{{ object.fio }}</a><br>
-        <strong>Адресс: </strong> {{ object.address }}<br>
-        <br>
-    {% endfor %}
+    {% include 'vet/owner/list_template_preview.html' %}
 {% endblock %}
 

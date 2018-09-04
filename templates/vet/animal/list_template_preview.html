@@ -1,0 +1,12 @@
+{% for animal in object_list %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a href="{% url 'vet:animal-detail' animal.pk %}" class="btn btn-info" role="button">
+                Подробнее
+            </a>
+        </div>
+        <div class="panel-body">
+            {% include 'vet/animal/detail_template_preview.html' %}
+        </div>
+    </div>
+{% endfor %}

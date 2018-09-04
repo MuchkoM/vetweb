@@ -1,7 +1,20 @@
 {% extends 'base.html' %}
-{% block title %}Информация об терапии{% endblock %}
+{% block panel_title %}{% block title %}Информация об терапии{% endblock %}{% endblock %}
+{% block back_button %}
+    <a href="{% url 'vet:animal-detail' object.animal.pk %}" class="btn btn-success" role="button">
+        Перейте к животному
+    </a>
+{% endblock %}
 {% block body %}
-    {% include 'vet/therapy/detail_template.html' %}
-    <a href="{% url 'vet:therapy-update' object.pk %}"> Обновить информацию об терапии</a>
-    <a href="{% url 'vet:therapy-delete' object.pk %}"> Удалить терапию</a>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a href="{% url 'vet:therapy-update' object.pk %}" class="btn btn-warning" role="button">
+                Обновить информацию об терапии</a>
+            <a href="{% url 'vet:therapy-delete' object.pk %}" class="btn btn-danger" role="button">
+                Удалить терапию</a>
+        </div>
+        <div class="panel-body">
+            {% include 'vet/therapy/detail_template_full.html' with therapy=object %}
+        </div>
+    </div>
 {% endblock %}

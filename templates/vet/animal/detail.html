@@ -1,19 +1,62 @@
 {% extends 'base.html' %}
-{% block title %}Информация о животном{% endblock %}
+{% block panel_title %}{% block title %}Информация о животном{% endblock %}{% endblock %}
+{% block back_button %}
+    <a href="{% url 'vet:owner-detail' object.owner.pk %}" class="btn btn-success" role="button">
+        Перейте к владельцу
+    </a>
+{% endblock %}
 {% block body %}
-    {% include 'vet/animal/detail_template.html' %}
-    <a href="{% url 'vet:animal-update' object.pk %}"> Изменить информацию о животном</a>
-    <a href="{% url 'vet:prevention-create-animal' object.pk %}"> Добавить вакцинацию</a>
-    <a href="{% url 'vet:therapy-create-animal' object.pk %}"> Добавить терапию</a>
-    <a href="{% url 'vet:animal-delete' object.pk %}"> Удалить животное</a>
-    <br><strong>Вакцинации: </strong> <br>
-    {% for prevention in object.prevention_set.all %}
-        <a href="{% url 'vet:prevention-detail' prevention.pk %}"> {{ prevention.data }} {{ prevention.vaccination.value }}</a>
-        <br>
-    {% endfor %}
-    <strong>Терапия: </strong> <br>
-    {% for therapy in object.therapy_set.all %}
-        <a href="{% url 'vet:therapy-detail' therapy.pk %}"> {{ therapy.data }} {{ therapy.diagnosis.value }}</a>
-        <br>
-    {% endfor %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a href="{% url 'vet:animal-update' object.pk %}" class="btn btn-warning" role="button">
+                Обновить информацию о животном </a>
+            <a href="{% url 'vet:animal-delete' object.pk %}" class="btn btn-danger" role="button">
+                Удалить животное</a>
+        </div>
+        <div class="panel-body">
+            {% include 'vet/animal/detail_template_full.html' %}
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <a href="{% url 'vet:prevention-create-animal' object.pk %}"
+                           class="btn btn-success" role="button">
+                            Добавить вакцинацию</a>
+                        Вакцинации
+                    </div>
+                    <div class="panel-body">
+                        {% for prevention in object.prevention_set.all %}
+                            <a href="{% url 'vet:prevention-detail' prevention.pk %}">
+                                {% include 'vet/prevention/detail_template_preview.html' %}
+                            </a>
+                            <br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <a href="{% url 'vet:therapy-create-animal' object.pk %}"
+                           class="btn btn-success" role="button">
+                            Добавить терапию</a>
+                        Терапия
+                    </div>
+                    <div class="panel-body">
+                        {% for therapy in object.therapy_set.all %}
+                            <a href="{% url 'vet:therapy-detail' therapy.pk %}">
+                                {% include 'vet/therapy/detail_template_preview.html' %}
+                            </a>
+                            <br>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}

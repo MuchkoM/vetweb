@@ -5,11 +5,7 @@ from django.utils.translation import ugettext as _
 from . import models
 
 
-class OwnerForm(forms.ModelForm):
-    class Meta:
-        model = models.Owner
-        fields = "__all__"
-
+# todo Придумать способ разделения владельцев и собак при поиске серез импут
 
 class ParamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -19,7 +15,29 @@ class ParamForm(forms.ModelForm):
         self.creator_pk = self.initial.pop('_pk', None)
 
 
-class AnimalForm(ParamForm):
+class TitledForm(forms.ModelForm):
+    title_action: str = None
+    title_model: str = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.title_action = _('Обновление') if kwargs['instance'] is not None else _('Добавление')
+
+    def get_title(self):
+        return f'{self.title_action} {self.title_model}'
+
+
+class OwnerForm(TitledForm):
+    title_model = _("владельца")
+
+    class Meta:
+        model = models.Owner
+        fields = "__all__"
+
+
+class AnimalForm(ParamForm, TitledForm):
+    title_model = _('животного')
+
     class Meta:
         model = models.Animal
         fields = '__all__'
@@ -59,7 +77,10 @@ class AnimalForm(ParamForm):
     def clean_owner(self):
         data_str = self.cleaned_data['owner']
         try:
-            data_obj = models.Owner.objects.get(fio=data_str)
+            if self.creator_pk is not None:
+                data_obj = models.Owner.objects.get(pk=self.creator_pk)
+            else:
+                data_obj = models.Owner.objects.get(fio=data_str)
         except models.Owner.DoesNotExist:
             raise forms.ValidationError(_('Владелец не существует'))
         return data_obj
@@ -76,7 +97,7 @@ class AnimalForm(ParamForm):
         return obj
 
 
-class AnimalProceduresForm(ParamForm):
+class AnimalProceduresForm(ParamForm, TitledForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -110,6 +131,8 @@ class AnimalProceduresForm(ParamForm):
 
 
 class PreventionForm(AnimalProceduresForm):
+    title_model = _('вакцинации')
+
     class Meta:
         model = models.Prevention
         fields = '__all__'
@@ -132,6 +155,8 @@ class PreventionForm(AnimalProceduresForm):
 
 
 class TherapyForm(AnimalProceduresForm):
+    title_model = _('терапии')
+
     class Meta:
         model = models.Therapy
         fields = '__all__'

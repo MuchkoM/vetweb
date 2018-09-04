@@ -1,11 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Список всех животных{% endblock %}
+{% block panel_title %}{% block title %}Список всех животных{% endblock %}{% endblock %}
 {% block body %}
-    {% for object in object_list %}
-        <strong>Владелец: </strong><a href="{% url 'vet:owner-detail' object.owner.pk %}">{{ object.owner }}</a><br>
-        <strong>Животное: </strong>
-        <a href="{% url 'vet:animal-detail' object.pk %}">{{ object.name }} {{ object.species.value }}</a>
-        <br>
-        <br>
-    {% endfor %}
+    {% include 'vet/animal/list_template_preview.html' %}
 {% endblock %}

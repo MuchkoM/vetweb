@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Список всех терапий{% endblock %}
-{% block body %}
-    {% for object in object_list %}
-        <a href="{% url 'vet:owner-detail' object.animal.owner.pk %}">{{ object.animal.owner }}</a>
-        <a href="{% url 'vet:animal-detail' object.animal.pk %}">{{ object.animal }}</a>
-        <a href="{% url 'vet:therapy-detail' object.pk %}">{{ object }}</a>
-        <br>
-    {% endfor %}
+{% block panel_title %}{% block title %}Список всех терапий{% endblock %}{% endblock %}
+{% block back_button %}
+    <a href="{% url 'vet:therapy-create' %}" class="btn btn-success" role="button">
+        Добавить терапию
+    </a>
 {% endblock %}
+{% block body %}
+    {% include 'vet/therapy/list_template_preview.html' %}
+{% endblock %}
+

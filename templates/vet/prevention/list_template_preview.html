@@ -1,0 +1,12 @@
+{% for prevention in object_list %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <a href="{% url 'vet:prevention-detail' prevention.pk %}" class="btn btn-info" role="button">
+                Подробнее
+            </a>
+        </div>
+        <div class="panel-body">
+            {% include 'vet/prevention/detail_template_full.html' %}
+        </div>
+    </div>
+{% endfor %}
