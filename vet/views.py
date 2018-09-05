@@ -9,7 +9,7 @@ from . import forms
 from . import models
 
 
-class CreateViewPk(generic.CreateView):
+class ParamCreateView(generic.CreateView):
     def get_initial(self):
         initial = super().get_initial()
         pk = self.kwargs.get('pk', None)
@@ -19,18 +19,18 @@ class CreateViewPk(generic.CreateView):
 
 
 class AjaxRequest:
-    # todo Аякс не реагирует на символы в нижнем регистре при приеме
     @classmethod
     def get_ajax(cls, request):
         if request.is_ajax():
-            result = list(cls.get_queryset_value(request.GET.dict()))
+            kwargs = request.GET.dict()
+            result = list(cls.get_queryset_value(kwargs))
             data = json.dumps(result)
         else:
             data = 'fail'
         return HttpResponse(data, 'application/json')
 
     @staticmethod
-    def get_queryset_value(args) -> QuerySet:
+    def get_queryset_value(kwarg: dict) -> QuerySet:
         pass
 
 
@@ -59,7 +59,7 @@ class OwnerView:
 
 
 class AnimalView:
-    class Create(CreateViewPk):
+    class Create(ParamCreateView):
         form_class = forms.AnimalForm
         template_name = 'vet/generic/generic_form.html'
 
@@ -83,7 +83,7 @@ class AnimalView:
 
 
 class PreventionView:
-    class Create(CreateViewPk):
+    class Create(ParamCreateView):
         form_class = forms.PreventionForm
         template_name = 'vet/generic/generic_form.html'
 
@@ -107,7 +107,7 @@ class PreventionView:
 
 
 class TherapyView:
-    class Create(CreateViewPk):
+    class Create(ParamCreateView):
         form_class = forms.TherapyForm
         template_name = 'vet/generic/generic_form.html'
 
@@ -131,6 +131,18 @@ class TherapyView:
 
 
 class Ajax:
+    class Owner(AjaxRequest):
+        @staticmethod
+        def get_queryset_value(kwarg):
+            return models.Owner.objects.filter(
+                fio__contains=kwarg['term'])[:10].values_list('fio', flat=True)
+
+    class Animal(AjaxRequest):
+        @staticmethod
+        def get_queryset_value(kwarg):
+            return models.Animal.objects.filter(
+                name__icontains=kwarg['term'])[:10].values_list('name', flat=True)
+
     class Species(AjaxRequest):
         @staticmethod
         def get_queryset_value(kwarg):
@@ -142,18 +154,6 @@ class Ajax:
         def get_queryset_value(kwarg):
             return models.Subspecies.objects.filter(species__value=kwarg['term_2']).filter(
                 value__icontains=kwarg['term'])[:10].values_list('value', flat=True)
-
-    class Owner(AjaxRequest):
-        @staticmethod
-        def get_queryset_value(kwarg):
-            return models.Owner.objects.filter(
-                fio__icontains=kwarg['term'])[:10].values_list('fio', flat=True)
-
-    class Animal(AjaxRequest):
-        @staticmethod
-        def get_queryset_value(kwarg):
-            return models.Animal.objects.filter(
-                name__icontains=kwarg['term'])[:10].values_list('name', flat=True)
 
     class Vaccination(AjaxRequest):
         @staticmethod

@@ -5,23 +5,42 @@ from django.utils.translation import ugettext as _
 from . import models
 
 
-# todo Придумать способ разделения владельцев и собак при поиске серез импут
+# todo Если имя не уникально(Animal,Owner), При обновлении и создании модели возникает проблема
+# todo неопределённости надмодели. Пока стоит костыль
+
+class AutocompleteCharField(forms.CharField):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.widget.attrs['class'] = "autocomplete"
+        self.widget.attrs['autocomplete'] = "off"
+
+
+class DateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['date'].widget.attrs['class'] = "datepicker"
+            self.fields['date'].widget.attrs['autocomplete'] = "off"
+        except KeyError:
+            pass
+
 
 class ParamForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.exist_obj = kwargs['instance']
+        self.instance_update = kwargs['instance']
         self.creator_pk = self.initial.pop('_pk', None)
 
 
 class TitledForm(forms.ModelForm):
     title_action: str = None
     title_model: str = None
+    title_button: str = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.title_action = _('Обновление') if kwargs['instance'] is not None else _('Добавление')
+        #self.title_action = _('Обновление') if kwargs['instance'] is not None else _('Добавление')
+        #self.title_button = _('Обновить') if kwargs['instance'] is not None else _('Добавить')
 
     def get_title(self):
         return f'{self.title_action} {self.title_model}'
@@ -35,7 +54,7 @@ class OwnerForm(TitledForm):
         fields = "__all__"
 
 
-class AnimalForm(ParamForm, TitledForm):
+class AnimalForm(ParamForm, TitledForm, DateForm):
     title_model = _('животного')
 
     class Meta:
@@ -50,29 +69,14 @@ class AnimalForm(ParamForm, TitledForm):
             self.initial['owner'] = owner.fio
             self.fields['owner'].disabled = True
 
-        if self.exist_obj is not None:
-            self.initial['owner'] = self.exist_obj.owner.fio
-            self.initial['species'] = self.exist_obj.species.value
-            self.initial['subspecies'] = self.exist_obj.subspecies.value
+        if self.instance_update is not None:
+            self.initial['owner'] = self.instance_update.owner.fio
+            self.initial['species'] = self.instance_update.species.value
+            self.initial['subspecies'] = self.instance_update.subspecies.value
 
-        self.fields['owner'].widget.attrs['class'] = "autocomplete"
-        self.fields['owner'].widget.attrs['autocomplete'] = "off"
-
-        self.fields['name'].widget.attrs['class'] = "autocomplete"
-        self.fields['name'].widget.attrs['autocomplete'] = "off"
-
-        self.fields['date'].widget.attrs['class'] = "datepicker"
-        self.fields['date'].widget.attrs['autocomplete'] = "off"
-
-        self.fields['species'].widget.attrs['class'] = "autocomplete"
-        self.fields['species'].widget.attrs['autocomplete'] = "off"
-
-        self.fields['subspecies'].widget.attrs['class'] = "autocomplete"
-        self.fields['subspecies'].widget.attrs['autocomplete'] = "off"
-
-    owner = forms.CharField(label=_('Владелец'), max_length=50)
-    species = forms.CharField(label=_('Вид'), max_length=40)
-    subspecies = forms.CharField(label=_('Порода'), max_length=40)
+    owner = AutocompleteCharField(label=_('Владелец'), max_length=50)
+    species = AutocompleteCharField(label=_('Вид'), max_length=40)
+    subspecies = AutocompleteCharField(label=_('Порода'), max_length=40)
 
     def clean_owner(self):
         data_str = self.cleaned_data['owner']
@@ -80,24 +84,27 @@ class AnimalForm(ParamForm, TitledForm):
             if self.creator_pk is not None:
                 data_obj = models.Owner.objects.get(pk=self.creator_pk)
             else:
-                data_obj = models.Owner.objects.get(fio=data_str)
+                data_obj = models.Owner.objects.filter(fio=data_str).first()
         except models.Owner.DoesNotExist:
             raise forms.ValidationError(_('Владелец не существует'))
         return data_obj
 
-    def clean_species(self):
-        data = self.cleaned_data['species']
-        data_obj, c = models.Species.objects.get_or_create(value=data.capitalize())
-        return data_obj
+    def clean(self):
+        cleaned_data = super().clean()
 
-    def clean_subspecies(self):
-        data = self.cleaned_data['subspecies']
-        data_2 = self.cleaned_data['species']
-        obj, c = models.Subspecies.objects.get_or_create(value=data.capitalize(), species=data_2)
-        return obj
+        species_str = self.cleaned_data['species']
+        subspecies_str = self.cleaned_data['subspecies']
+
+        species, c = models.Species.objects.get_or_create(value=species_str)
+        subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
+
+        cleaned_data['species'] = species
+        cleaned_data['subspecies'] = subspecies
+
+        return cleaned_data
 
 
-class AnimalProceduresForm(ParamForm, TitledForm):
+class AnimalProceduresForm(ParamForm, TitledForm, DateForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -106,25 +113,16 @@ class AnimalProceduresForm(ParamForm, TitledForm):
             self.initial['animal'] = animal.name
             self.fields['animal'].disabled = True
 
-        if self.exist_obj is not None:
-            self.initial['animal'] = self.exist_obj.animal.name
+        if self.instance_update is not None:
+            self.initial['animal'] = self.instance_update.animal.name
             self.fields['animal'].disabled = True
 
-        self.fields['date'].widget.attrs['class'] = "datepicker"
-        self.fields['date'].widget.attrs['autocomplete'] = "off"
-
-        self.fields['animal'].widget.attrs['class'] = "autocomplete"
-        self.fields['animal'].widget.attrs['autocomplete'] = "off"
-
-    animal = forms.CharField(label=_('Животное'), max_length=40)
+    animal = AutocompleteCharField(label=_('Животное'), max_length=40)
 
     def clean_animal(self):
-        data_str = self.cleaned_data['animal']
+        name_animal = self.cleaned_data['animal']
         try:
-            # todo Need do normal search  can be bad
-            # todo Если имя не уникально, get возвращает более одного объекта
-            # todo нужно что-то придумать
-            data_obj = models.Animal.objects.get(name=data_str)
+            data_obj = models.Animal.objects.filter(fio=name_animal).first()
         except models.Animal.DoesNotExist:
             raise forms.ValidationError(_('Животного не существует'))
         return data_obj
@@ -140,18 +138,15 @@ class PreventionForm(AnimalProceduresForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self.exist_obj is not None:
-            self.initial['vaccination'] = self.exist_obj.vaccination.value
+        if self.instance_update is not None:
+            self.initial['vaccination'] = self.instance_update.vaccination.value
 
-        self.fields['vaccination'].widget.attrs['class'] = "autocomplete"
-        self.fields['vaccination'].widget.attrs['autocomplete'] = "off"
-
-    vaccination = forms.CharField(label=_('Вакцина'), max_length=40)
+    vaccination = AutocompleteCharField(label=_('Вакцина'), max_length=40)
 
     def clean_vaccination(self):
-        data = self.cleaned_data['vaccination']
-        data_obj, c = models.Vaccination.objects.get_or_create(value=data.capitalize())
-        return data_obj
+        vaccination_str = self.cleaned_data['vaccination']
+        vaccination, c = models.Vaccination.objects.get_or_create(value=vaccination_str)
+        return vaccination
 
 
 class TherapyForm(AnimalProceduresForm):
@@ -163,14 +158,12 @@ class TherapyForm(AnimalProceduresForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.exist_obj is not None:
-            self.initial['diagnosis'] = self.exist_obj.diagnosis.value
-        self.fields['diagnosis'].widget.attrs['class'] = "autocomplete"
-        self.fields['diagnosis'].widget.attrs['autocomplete'] = "off"
+        if self.instance_update is not None:
+            self.initial['diagnosis'] = self.instance_update.diagnosis.value
 
-    diagnosis = forms.CharField(label=_('Диагноз'), max_length=40)
+    diagnosis = AutocompleteCharField(label=_('Диагноз'), max_length=40)
 
     def clean_diagnosis(self):
-        data = self.cleaned_data['diagnosis']
-        data_obj, c = models.Diagnosis.objects.get_or_create(value=data.capitalize())
-        return data_obj
+        diagnosis_str = self.cleaned_data['diagnosis']
+        diagnosis, c = models.Diagnosis.objects.get_or_create(value=diagnosis_str)
+        return diagnosis
