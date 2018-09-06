@@ -14,14 +14,19 @@ class Owner(models.Model):
     address = models.CharField(verbose_name=_('Адрес'), max_length=70, blank=True)
     phone = models.CharField(verbose_name=_('Телефон'), max_length=14, blank=True)
     email = models.EmailField(verbose_name=_('Email'), max_length=50, blank=True)
-
     date = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('vet:owner-detail', kwargs={'pk': self.pk})
 
+    @staticmethod
+    def get_fio_address_by_term(term):
+        q1 = Owner.objects.filter(fio__contains=term)
+        q2 = Owner.objects.filter(address__contains=term)
+        return (q1 | q2).distinct()
+
     def __str__(self):
-        return f'{self.fio}'
+        return f'{self.fio} {self.address}'
 
 
 class ValuesModel(models.Model):

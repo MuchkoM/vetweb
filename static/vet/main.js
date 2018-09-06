@@ -40,25 +40,31 @@ $(function () {
         let month = now.diff(birth, 'month') % 12;
         return ((year) ? getRusStringYear(year) : '') + ' ' + getRusStringMonth(month);
     });
-    $("info").text(function (i, origText) {
-        if (origText)
-            return origText;
-        else
-            return "<Не указанно>"
-    });
+    $("info").text((i, origText) => origText ? origText : "<Не указанно>");
     $(".autocomplete[name]").autocomplete({
         source: function (request, response) {
             let name = this.element.attr('name');
-            if (name === 'subspecies') {
-                $.getJSON(ajax['subspecies'], {
-                    term: request.term,
-                    term_2: $(".autocomplete[name='species']").val()
-                }, response);
-            } else {
-                $.getJSON(ajax[name], {
-                    term: request.term,
-                }, response);
+            console.log(name);
+            switch (name) {
+                case 'subspecies':
+                    $.getJSON(ajax['subspecies'], {
+                        term: request.term,
+                        term_2: $(".autocomplete[name='species']").val()
+                    }, response);
+                    break;
+                default:
+                    $.getJSON(ajax[name], {
+                        term: request.term,
+                    }, response);
             }
+        },
+        select: function (event, ui) {
+            let value = ui.item.value;
+            let name = $(this).attr('name')
+            if (name === 'owner') {
+                $('#id_owner_id').val(value);
+            }
+            ui.item.value = ui.item.label;
         },
         minLength: 0,
     }).focus(function () {

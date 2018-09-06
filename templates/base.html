@@ -17,7 +17,6 @@
     <script>
         let ajax = {
             'owner': "{% url 'vet:ajax-owner' %}",
-            'animal': "{% url 'vet:ajax-animal' %}",
             'species': "{% url 'vet:ajax-species' %}",
             'diagnosis': "{% url 'vet:ajax-diagnosis' %}",
             'subspecies': "{% url 'vet:ajax-subspecies' %}",
@@ -84,18 +83,18 @@
                         Новое животное
                     </a>
                 </li>
-                <li class="">
-                    <a href="{% url 'vet:prevention-create' %}">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-                        Новая вакцинация
-                    </a>
-                </li>
-                <li class="">
-                    <a href="{% url 'vet:therapy-create' %}">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-                        Новая терапия
-                    </a>
-                </li>
+                {#                <li class="">#}
+                {#                    <a href="{% url 'vet:prevention-create' %}">#}
+                {#                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;#}
+                {#                        Новая вакцинация#}
+                {#                    </a>#}
+                {#                </li>#}
+                {#                <li class="">#}
+                {#                    <a href="{% url 'vet:therapy-create' %}">#}
+                {#                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;#}
+                {#                        Новая терапия#}
+                {#                    </a>#}
+                {#                </li>#}
                 {#                <li class="">#}
                 {#                    <a href="{% url 'account:user-register' %}">#}
                 {#                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;#}

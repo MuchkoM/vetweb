@@ -145,14 +145,10 @@ class Ajax:
     class Owner(AjaxRequest):
         @staticmethod
         def get_queryset_value(kwarg):
-            return models.Owner.objects.filter(
-                fio__contains=kwarg['term'])[:10].values_list('fio', flat=True)
-
-    class Animal(AjaxRequest):
-        @staticmethod
-        def get_queryset_value(kwarg):
-            return models.Animal.objects.filter(
-                name__icontains=kwarg['term'])[:10].values_list('name', flat=True)
+            term = kwarg['term'].strip()
+            owners = models.Owner.get_fio_address_by_term(term)[:10]
+            list_out = [{'label': f'{owner.fio} {owner.address}', 'value': owner.pk} for owner in owners]
+            return list_out
 
     class Species(AjaxRequest):
         @staticmethod

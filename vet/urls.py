@@ -38,7 +38,6 @@ url_therapy = [
 ]
 url_ajax = [
     path('owner/', views.Ajax.Owner.get_ajax, name='ajax-owner'),
-    path('animal/', views.Ajax.Animal.get_ajax, name='ajax-animal'),
     path('species/', views.Ajax.Species.get_ajax, name='ajax-species'),
     path('diagnosis/', views.Ajax.Diagnosis.get_ajax, name='ajax-diagnosis'),
     path('subspecies/', views.Ajax.Subspecies.get_ajax, name='ajax-subspecies'),

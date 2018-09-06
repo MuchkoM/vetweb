@@ -5,9 +5,6 @@ from django.utils.translation import ugettext as _
 from . import models
 
 
-# todo Если имя не уникально(Animal,Owner), При обновлении и создании модели возникает проблема todo неопределённости
-#  надмодели. Пока стоит костыль
-
 class AutocompleteCharField(forms.CharField):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -66,28 +63,20 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
 
         if self.creator_pk is not None:
             owner = get_object_or_404(models.Owner, pk=self.creator_pk)
-            self.initial['owner'] = owner.fio
+            self.initial['owner_id'] = owner.pk
+            self.initial['owner'] = str(owner)
             self.fields['owner'].disabled = True
 
         if self.instance_update is not None:
-            self.initial['owner'] = self.instance_update.owner.fio
+            self.initial['owner'] = self.instance_update.owner.__str__()
+            self.initial['owner_pk'] = self.instance_update.owner.pk
             self.initial['species'] = self.instance_update.species.value
             self.initial['subspecies'] = self.instance_update.subspecies.value
 
-    owner = AutocompleteCharField(label=_('Владелец'), max_length=50)
+    owner = AutocompleteCharField(label=_('Владелец'), max_length=50, strip=False)
+    owner_id = forms.IntegerField(widget=forms.HiddenInput())
     species = AutocompleteCharField(label=_('Вид'), max_length=40)
     subspecies = AutocompleteCharField(label=_('Порода'), max_length=40)
-
-    def clean_owner(self):
-        data_str = self.cleaned_data['owner']
-        try:
-            if self.creator_pk is not None:
-                data_obj = models.Owner.objects.get(pk=self.creator_pk)
-            else:
-                data_obj = models.Owner.objects.filter(fio=data_str).first()
-        except models.Owner.DoesNotExist:
-            raise forms.ValidationError(_('Владелец не существует'))
-        return data_obj
 
     def clean(self):
         cleaned_data = super().clean()
@@ -101,21 +90,32 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
         cleaned_data['species'] = species
         cleaned_data['subspecies'] = subspecies
 
+        owner_id = cleaned_data['owner_id']
+        try:
+            owner_str = cleaned_data['owner']
+            owner = models.Owner.objects.get(pk=owner_id)
+            owner_str_2 = str(owner)
+            if owner_str_2 != owner_str:
+                cleaned_data.pop('owner')
+                self.add_error('owner', _('Владелец введён неправильно'))
+            cleaned_data['owner'] = owner
+        except models.Owner.DoesNotExist:
+            self.add_error('owner', _('Владелец введён неправильно'))
+
         return cleaned_data
 
 
 class AnimalProceduresForm(ParamForm, TitledForm, DateForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['animal'].disabled = True
 
         if self.creator_pk is not None:
             animal = get_object_or_404(models.Animal, pk=self.creator_pk)
             self.initial['animal'] = animal.name
-            self.fields['animal'].disabled = True
 
         if self.instance_update is not None:
             self.initial['animal'] = self.instance_update.animal.name
-            self.fields['animal'].disabled = True
 
     animal = AutocompleteCharField(label=_('Животное'), max_length=40)
 
