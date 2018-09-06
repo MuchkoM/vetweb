@@ -18,6 +18,12 @@ class ParamCreateView(generic.CreateView):
         return initial
 
 
+class NoConfirmDeleteView(generic.DeleteView):
+    #template_name = 'vet/generic/generic_confirm_delete.html'
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
+
+
 class AjaxRequest:
     @classmethod
     def get_ajax(cls, request):
@@ -52,9 +58,8 @@ class OwnerView:
         model = models.Owner
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(generic.DeleteView):
+    class Delete(NoConfirmDeleteView):
         model = models.Owner
-        template_name = 'vet/generic/generic_confirm_delete.html'
         success_url = reverse_lazy('vet:owner-list')
 
 
@@ -76,9 +81,8 @@ class AnimalView:
         model = models.Animal
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(generic.DeleteView):
+    class Delete(NoConfirmDeleteView):
         model = models.Animal
-        template_name = 'vet/generic/generic_confirm_delete.html'
 
         def get_success_url(self):
             owner_pk = self.object.owner.pk
@@ -103,9 +107,8 @@ class PreventionView:
         model = models.Prevention
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(generic.DeleteView):
+    class Delete(NoConfirmDeleteView):
         model = models.Prevention
-        template_name = 'vet/generic/generic_confirm_delete.html'
 
         def get_success_url(self):
             animal_pk = self.object.animal.pk
@@ -130,9 +133,8 @@ class TherapyView:
         model = models.Therapy
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(generic.DeleteView):
+    class Delete(NoConfirmDeleteView):
         model = models.Therapy
-        template_name = 'vet/generic/generic_confirm_delete.html'
 
         def get_success_url(self):
             animal_pk = self.object.animal.pk
