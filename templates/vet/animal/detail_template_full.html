@@ -1,11 +1,11 @@
 <div><strong>Владелец: </strong>{{ animal.owner.fio }}</div>
 <div><strong>Животное: </strong>{{ animal.name }}</div>
-<strong>Возраст: </strong><i class="age">{{ animal.date }}</i>
+<div><strong>Возраст: </strong><age>{{ animal.date }}</age></div>
 <div><strong>Пол: </strong> {{ animal.get_gender_display }}</div>
 <div><strong>Вид: </strong>{{ animal.species.value }}</div>
 <div><strong>Порода: </strong>{{ animal.subspecies.value }}</div>
 <div><strong>Агрессивность: </strong> {{ animal.get_aggressive_display }}</div>
 <div><strong>Индефикация: </strong> {{ animal.get_identification_display }}</div>
-<div><strong>Индефикация код: </strong> {{ animal.identification_value }}</div>
+<div><strong>Индефикация код: </strong> <info>{{ animal.identification_value }}</info></div>
 <div><strong>Стереализация: </strong> {{ animal.get_is_sterilization_display }}</div>
 <div><strong>Умерло: </strong> {{ animal.get_is_die_display }}</div>

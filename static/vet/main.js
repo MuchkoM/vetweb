@@ -32,13 +32,19 @@ $(function () {
         changeMonth: true,
         changeYear: true,
     });
-    $(".age").text(function (i, origText) {
+    $("age").text(function (i, origText) {
         moment.locale('ru');
         let birth = moment(origText, "DD MMM YYYY");
         let now = moment();
         let year = now.diff(birth, 'year');
         let month = now.diff(birth, 'month') % 12;
         return ((year) ? getRusStringYear(year) : '') + ' ' + getRusStringMonth(month);
+    });
+    $("info").text(function (i, origText) {
+        if (origText)
+            return origText;
+        else
+            return "<Не указанно>"
     });
     $(".autocomplete[name='owner']").autocomplete({
         source: ajax_owner,

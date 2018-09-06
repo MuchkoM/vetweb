@@ -85,8 +85,7 @@ class Animal(models.Model):
                                 on_delete=models.DO_NOTHING)
     subspecies = models.ForeignKey(Subspecies,
                                    verbose_name=_('Порода'),
-                                   on_delete=models.DO_NOTHING,
-                                   null=True)
+                                   on_delete=models.DO_NOTHING)
     date = models.DateField(verbose_name=_('Дата рождения'),
                             blank=False, default=date.today)
     gender = models.BooleanField(verbose_name=_('Пол'),
@@ -94,13 +93,13 @@ class Animal(models.Model):
                                  default=GENDER_MALE)
 
     aggressive = models.CharField(verbose_name=_('Агрессивность'),
-                                  max_length=1,
                                   choices=AGGRESSIVE_CHOICE,
-                                  default=AGGRESSIVE_LOW)
+                                  default=AGGRESSIVE_LOW,
+                                  max_length=1)
     identification = models.CharField(verbose_name=_('Идентификация'),
-                                      max_length=1,
                                       choices=IDENTIFICATION_CHOICE,
-                                      default=IDENTIFICATION_NONE)
+                                      default=IDENTIFICATION_NONE,
+                                      max_length=1)
     identification_value = models.CharField(verbose_name=_('Код идентификации'),
                                             max_length=50,
                                             blank=True)
@@ -110,14 +109,6 @@ class Animal(models.Model):
     is_die = models.BooleanField(verbose_name=_('Погибло'),
                                  choices=YES_NO_CHOICE,
                                  default=NO)
-
-    def get_unique_str(self):
-        return f'{self.name}|{self.owner.fio}'
-
-    @staticmethod
-    def get_animal_by_str(s: str):
-        ani_name, fio = s.split('|')
-        return Animal.objects.get(name=ani_name, owner__fio=fio)
 
     def get_absolute_url(self):
         return reverse('vet:animal-detail', kwargs={'pk': self.pk})
@@ -159,8 +150,7 @@ class Prevention(AnimalProcedures):
     )
     vaccination = models.ForeignKey(Vaccination, verbose_name=_('Прививка'),
                                     on_delete=models.CASCADE)
-    type_vaccination = models.CharField(verbose_name=_('Тип прививки'),
-                                        max_length=1,
+    type_vaccination = models.CharField(verbose_name=_('Тип прививки'), max_length=1,
                                         choices=TYPE_CHOICE,
                                         default=TYPE_FIRST)
 
@@ -176,7 +166,9 @@ class Therapy(AnimalProcedures):
         (THERAPY_CLINIC, _('Амбулатория')),
         (THERAPY_OPERATIVE, _('Хирургия')),
     )
-    type = models.CharField(max_length=1, verbose_name=_('Тип терапии'), choices=THERAPY_TYPE, default=THERAPY_CLINIC)
+    type = models.CharField(verbose_name=_('Тип терапии'), max_length=1,
+                            choices=THERAPY_TYPE,
+                            default=THERAPY_CLINIC)
     symptomatic = models.CharField(verbose_name=_('Симптомы'), max_length=100, blank=True)
     labs = models.CharField(verbose_name=_('Исследования'), max_length=100, blank=True)
     diagnosis = models.ForeignKey(Diagnosis, verbose_name=_('Диагноз'),
