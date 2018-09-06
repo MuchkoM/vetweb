@@ -15,12 +15,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/jquery-ui-i18n.min.js"></script>
     <script src="{% static 'vet/main.js' %}"></script>
     <script>
-        let ajax_owner = "{% url 'vet:ajax-owner' %}";
-        let ajax_animal = "{% url 'vet:ajax-animal' %}";
-        let ajax_species = "{% url 'vet:ajax-species' %}";
-        let ajax_diagnosis = "{% url 'vet:ajax-diagnosis' %}";
-        let ajax_subspecies = "{% url 'vet:ajax-subspecies' %}";
-        let ajax_vaccination = "{% url 'vet:ajax-vaccination' %}";
+        let ajax = {
+            'owner': "{% url 'vet:ajax-owner' %}",
+            'animal': "{% url 'vet:ajax-animal' %}",
+            'species': "{% url 'vet:ajax-species' %}",
+            'diagnosis': "{% url 'vet:ajax-diagnosis' %}",
+            'subspecies': "{% url 'vet:ajax-subspecies' %}",
+            'vaccination': "{% url 'vet:ajax-vaccination' %}",
+        }
     </script>
     <meta charset="UTF-8">
     <title> {% block title %}WetVeb{% endblock %}</title>

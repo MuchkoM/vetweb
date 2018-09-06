@@ -5,8 +5,8 @@ from django.utils.translation import ugettext as _
 from . import models
 
 
-# todo Если имя не уникально(Animal,Owner), При обновлении и создании модели возникает проблема
-# todo неопределённости надмодели. Пока стоит костыль
+# todo Если имя не уникально(Animal,Owner), При обновлении и создании модели возникает проблема todo неопределённости
+#  надмодели. Пока стоит костыль
 
 class AutocompleteCharField(forms.CharField):
     def __init__(self, *args, **kwargs):
