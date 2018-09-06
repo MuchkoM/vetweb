@@ -9,7 +9,9 @@
         <br>
         {% for field in form %}
             <div class="form-group">
-                <label class="control-label col-sm-3"> {{ field.label }}</label>
+                {% if not field.is_hidden %}
+                    <label class="control-label col-sm-3"> {{ field.label }}</label>
+                {% endif %}
                 <div class="col-sm-2">{{ field }}</div>
                 <label class="control-label col-sm-2 text-danger small">
                     {{ field.errors|first }}

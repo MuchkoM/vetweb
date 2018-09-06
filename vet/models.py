@@ -8,11 +8,14 @@ from django.utils.translation import ugettext as _
 class Owner(models.Model):
     class Meta:
         unique_together = ('fio', 'address',)
+        ordering = ("-date",)
 
     fio = models.CharField(verbose_name=_('ФИО'), max_length=50)
     address = models.CharField(verbose_name=_('Адрес'), max_length=70, blank=True)
     phone = models.CharField(verbose_name=_('Телефон'), max_length=14, blank=True)
     email = models.EmailField(verbose_name=_('Email'), max_length=50, blank=True)
+
+    date = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return reverse('vet:owner-detail', kwargs={'pk': self.pk})
@@ -30,7 +33,7 @@ class ValuesModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ["date"]
+        ordering = ["-date"]
 
 
 class Species(ValuesModel):
