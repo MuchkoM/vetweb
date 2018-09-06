@@ -39,8 +39,8 @@ class TitledForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self.title_action = _('Обновление') if kwargs['instance'] is not None else _('Добавление')
-        #self.title_button = _('Обновить') if kwargs['instance'] is not None else _('Добавить')
+        self.title_action = _('Обновление') if kwargs['instance'] is not None else _('Добавление')
+        self.title_button = _('Обновить') if kwargs['instance'] is not None else _('Добавить')
 
     def get_title(self):
         return f'{self.title_action} {self.title_model}'
@@ -122,7 +122,7 @@ class AnimalProceduresForm(ParamForm, TitledForm, DateForm):
     def clean_animal(self):
         name_animal = self.cleaned_data['animal']
         try:
-            data_obj = models.Animal.objects.filter(fio=name_animal).first()
+            data_obj = models.Animal.objects.filter(name=name_animal).first()
         except models.Animal.DoesNotExist:
             raise forms.ValidationError(_('Животного не существует'))
         return data_obj

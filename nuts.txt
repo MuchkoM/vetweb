@@ -6,3 +6,4 @@ python manage.py dumpdata > data.json
 python manage.py collectstatic
 admin@admin.admin
 admin
+git clone https://github.com/MuchkoM/vetweb.git

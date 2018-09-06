@@ -79,7 +79,10 @@ class AnimalView:
     class Delete(generic.DeleteView):
         model = models.Animal
         template_name = 'vet/generic/generic_confirm_delete.html'
-        success_url = reverse_lazy('vet:animal-list')
+
+        def get_success_url(self):
+            owner_pk = self.object.owner.pk
+            return reverse_lazy('vet:owner-detail', kwargs={'pk': owner_pk})
 
 
 class PreventionView:
@@ -103,7 +106,10 @@ class PreventionView:
     class Delete(generic.DeleteView):
         model = models.Prevention
         template_name = 'vet/generic/generic_confirm_delete.html'
-        success_url = reverse_lazy('vet:prevention-list')
+
+        def get_success_url(self):
+            animal_pk = self.object.animal.pk
+            return reverse_lazy('vet:animal-detail', kwargs={'pk': animal_pk})
 
 
 class TherapyView:
@@ -127,7 +133,10 @@ class TherapyView:
     class Delete(generic.DeleteView):
         model = models.Therapy
         template_name = 'vet/generic/generic_confirm_delete.html'
-        success_url = reverse_lazy('vet:therapy-list')
+
+        def get_success_url(self):
+            animal_pk = self.object.animal.pk
+            return reverse_lazy('vet:animal-detail', kwargs={'pk': animal_pk})
 
 
 class Ajax:
