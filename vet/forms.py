@@ -60,7 +60,7 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self.initial['owner_id'] = -1
         if self.creator_pk is not None:
             owner = get_object_or_404(models.Owner, pk=self.creator_pk)
             self.initial['owner_id'] = owner.pk
@@ -69,7 +69,7 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
 
         if self.instance_update is not None:
             self.initial['owner'] = self.instance_update.owner.__str__()
-            self.initial['owner_pk'] = self.instance_update.owner.pk
+            self.initial['owner_id'] = self.instance_update.owner.pk
             self.initial['species'] = self.instance_update.species.value
             self.initial['subspecies'] = self.instance_update.subspecies.value
 
@@ -79,10 +79,16 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
     subspecies = AutocompleteCharField(label=_('Порода'), max_length=40)
 
     def clean(self):
+        """
+        Convert from to comportble to model
+        species str => species model
+        subspecies str => subspecies model
+        owner_id str ,owner str => owner modle
+        """
         cleaned_data = super().clean()
 
-        species_str = self.cleaned_data['species']
-        subspecies_str = self.cleaned_data['subspecies']
+        species_str = cleaned_data['species']
+        subspecies_str = cleaned_data['subspecies']
 
         species, c = models.Species.objects.get_or_create(value=species_str)
         subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
@@ -90,17 +96,21 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
         cleaned_data['species'] = species
         cleaned_data['subspecies'] = subspecies
 
-        owner_id = cleaned_data['owner_id']
         try:
+            print(cleaned_data)
+            owner_id = cleaned_data['owner_id']
             owner_str = cleaned_data['owner']
+
             owner = models.Owner.objects.get(pk=owner_id)
+
             owner_str_2 = str(owner)
             if owner_str_2 != owner_str:
-                cleaned_data.pop('owner')
-                self.add_error('owner', _('Владелец введён неправильно'))
+                self.add_error('owner', _('Строки не совпали'))
             cleaned_data['owner'] = owner
         except models.Owner.DoesNotExist:
             self.add_error('owner', _('Владелец введён неправильно'))
+        except KeyError:
+            self.add_error('owner', _('Владелец выбран неправильно'))
 
         return cleaned_data
 

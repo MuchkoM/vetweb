@@ -60,7 +60,7 @@ $(function () {
         },
         select: function (event, ui) {
             let value = ui.item.value;
-            let name = $(this).attr('name')
+            let name = $(this).attr('name');
             if (name === 'owner') {
                 $('#id_owner_id').val(value);
             }
