@@ -19,7 +19,6 @@ class ParamCreateView(generic.CreateView):
 
 
 class NoConfirmDeleteView(generic.DeleteView):
-    # template_name = 'vet/generic/generic_confirm_delete.html'
     def get(self, *args, **kwargs):
         return self.post(*args, **kwargs)
 

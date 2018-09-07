@@ -15,11 +15,9 @@ class AutocompleteCharField(forms.CharField):
 class DateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        try:
+        if 'date' in self.fields:
             self.fields['date'].widget.attrs['class'] = "datepicker"
             self.fields['date'].widget.attrs['autocomplete'] = "off"
-        except KeyError:
-            pass
 
 
 class ParamForm(forms.ModelForm):
@@ -51,15 +49,10 @@ class OwnerForm(TitledForm):
         fields = "__all__"
 
 
-class AnimalForm(ParamForm, TitledForm, DateForm):
-    title_model = _('животного')
-
-    class Meta:
-        model = models.Animal
-        fields = '__all__'
-
+class OwnerAutocompleteChoiceForm(ParamForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         self.initial['owner_id'] = -1
         if self.creator_pk is not None:
             owner = get_object_or_404(models.Owner, pk=self.creator_pk)
@@ -68,36 +61,19 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
             self.fields['owner'].disabled = True
 
         if self.instance_update is not None:
-            self.initial['owner'] = self.instance_update.owner.__str__()
             self.initial['owner_id'] = self.instance_update.owner.pk
-            self.initial['species'] = self.instance_update.species.value
-            self.initial['subspecies'] = self.instance_update.subspecies.value
+            self.initial['owner'] = self.instance_update.owner.__str__()
 
     owner = AutocompleteCharField(label=_('Владелец'), max_length=50, strip=False)
-    owner_id = forms.IntegerField(widget=forms.HiddenInput())
-    species = AutocompleteCharField(label=_('Вид'), max_length=40)
-    subspecies = AutocompleteCharField(label=_('Порода'), max_length=40)
+    owner_id = forms.IntegerField(widget=forms.HiddenInput(), label="")
 
     def clean(self):
         """
-        Convert from to comportble to model
-        species str => species model
-        subspecies str => subspecies model
         owner_id str ,owner str => owner modle
         """
         cleaned_data = super().clean()
 
-        species_str = cleaned_data['species']
-        subspecies_str = cleaned_data['subspecies']
-
-        species, c = models.Species.objects.get_or_create(value=species_str)
-        subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
-
-        cleaned_data['species'] = species
-        cleaned_data['subspecies'] = subspecies
-
         try:
-            print(cleaned_data)
             owner_id = cleaned_data['owner_id']
             owner_str = cleaned_data['owner']
 
@@ -111,6 +87,38 @@ class AnimalForm(ParamForm, TitledForm, DateForm):
             self.add_error('owner', _('Владелец введён неправильно'))
         except KeyError:
             self.add_error('owner', _('Владелец выбран неправильно'))
+
+        return cleaned_data
+
+
+class AnimalForm(OwnerAutocompleteChoiceForm, TitledForm, DateForm):
+    title_model = _('животного')
+
+    class Meta:
+        model = models.Animal
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance_update is not None:
+            self.initial['species'] = self.instance_update.species.value
+            self.initial['subspecies'] = self.instance_update.subspecies.value
+
+    species = AutocompleteCharField(label=_('Вид'), max_length=40)
+    subspecies = AutocompleteCharField(label=_('Порода'), max_length=40)
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        species_str = cleaned_data['species']
+        subspecies_str = cleaned_data['subspecies']
+
+        species, c = models.Species.objects.get_or_create(value=species_str)
+        subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
+
+        cleaned_data['species'] = species
+        cleaned_data['subspecies'] = subspecies
 
         return cleaned_data
 

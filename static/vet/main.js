@@ -43,8 +43,7 @@ $(function () {
     $("info").text((i, origText) => origText ? origText : "<Не указанно>");
     $(".autocomplete[name]").autocomplete({
         source: function (request, response) {
-            let name = this.element.attr('name');
-            console.log(name);
+            let name = this.element.attr('name');//WHY??? this is place do same thing like other
             switch (name) {
                 case 'subspecies':
                     $.getJSON(ajax['subspecies'], {
@@ -60,7 +59,7 @@ $(function () {
         },
         select: function (event, ui) {
             let value = ui.item.value;
-            let name = $(this).attr('name');
+            let name = $(this).attr('name');//WHY??? this is place do same thing like other
             if (name === 'owner') {
                 $('#id_owner_id').val(value);
             }

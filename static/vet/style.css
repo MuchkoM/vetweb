@@ -9,3 +9,24 @@ body {
 .navbar-brand {
     font-family: "Satisfy", cursive;
 }
+
+.ui-datepicker select {
+    padding: 0 4px;
+    height: 25px;
+}
+
+select {
+    -webkit-appearance: button;
+    -webkit-border-radius: 2px;
+    -webkit-padding-end: 20px;
+    -webkit-padding-start: 2px;
+    -webkit-user-select: none;
+    background-image: url(http://i62.tinypic.com/15xvbd5.png);
+    background-position: 97% center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    padding: 2px 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 175px;
+}
