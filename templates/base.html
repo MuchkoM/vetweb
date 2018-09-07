@@ -95,18 +95,18 @@
                 {#                        Новая терапия#}
                 {#                    </a>#}
                 {#                </li>#}
-                {#                <li class="">#}
-                {#                    <a href="{% url 'account:user-register' %}">#}
-                {#                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;#}
-                {#                        Login#}
-                {#                    </a>#}
-                {#                </li>#}
-                {#                <li class="">#}
-                {#                    <a href="{% url 'account:user-logout' %}">#}
-                {#                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;#}
-                {#                        Logout#}
-                {#                    </a>#}
-                {#                </li>#}
+                <li class="">
+                    <a href="{% url 'account:user-register' %}">
+                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;
+                        Login
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'account:user-logout' %}">
+                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;
+                        Logout
+                    </a>
+                </li>
                 <li class="">
                     <a href="{% url "admin:index" %}">
                         <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&nbsp;

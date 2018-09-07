@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls')),
     path('vet/', include('vet.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', RedirectView.as_view(pattern_name='vet:owner-list', permanent=True)),
 ]
 

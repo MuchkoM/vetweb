@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -25,6 +26,10 @@ SECRET_KEY = 'g9k)6((ww4^tw&k)!n459*_p@j%(4u3z=ik^)d$nf%aepm%lc@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+LOGIN_URL = reverse_lazy('account:user-register')
+
+LOGIN_REDIRECT_URL = '/'
 
 ALLOWED_HOSTS = ['muchkom.pythonanywhere.com', '127.0.0.1']
 
@@ -72,47 +77,6 @@ TEMPLATES = [
 ]
 WSGI_APPLICATION = 'vetweb.wsgi.application'
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": True,
-    "formatters": {
-        "simple": {"format": "[%(name)s] %(levelname)s: %(message)s"},
-        "full": {"format": "%(asctime)s [%(name)s] %(levelname)s: %(message)s"},
-        'django.server': {
-            '()': 'django.utils.log.ServerFormatter',
-            'format': '[%(server_time)s] %(message)s',
-        },
-    },
-    "filters": {
-        "require_debug_false": {
-            "()": "django.utils.log.RequireDebugFalse",
-        },
-    },
-    "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-        'django.server': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'django.server',
-        },
-    },
-    "loggers": {
-        "django.request": {
-            "handlers": [],
-            "level": "ERROR",
-            "propagate": False,
-        },
-        'django.server': {
-            'handlers': ['django.server'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    }
-}
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 

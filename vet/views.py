@@ -1,5 +1,6 @@
 import json
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -7,6 +8,10 @@ from django.views import generic
 
 from . import forms
 from . import models
+
+
+class AuthRequireView:
+    pass
 
 
 class ParamCreateView(generic.CreateView):
@@ -40,24 +45,24 @@ class AjaxRequest:
 
 
 class OwnerView:
-    class Create(generic.CreateView):
+    class Create(AuthRequireView, generic.CreateView):
         form_class = forms.OwnerForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(generic.DetailView):
+    class Detail(AuthRequireView, generic.DetailView):
         model = models.Owner
         template_name = 'vet/owner/detail.html'
 
-    class List(generic.ListView):
+    class List(AuthRequireView, generic.ListView):
         model = models.Owner
         template_name = 'vet/owner/list.html'
 
-    class Update(generic.UpdateView):
+    class Update(AuthRequireView, generic.UpdateView):
         form_class = forms.OwnerForm
         model = models.Owner
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(NoConfirmDeleteView):
+    class Delete(AuthRequireView, NoConfirmDeleteView):
         model = models.Owner
         success_url = reverse_lazy('vet:owner-list')
 

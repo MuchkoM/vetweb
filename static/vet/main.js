@@ -67,6 +67,7 @@ $(function () {
         },
         minLength: 0,
     }).focus(function () {
+        $(this).select();
         $(this).autocomplete("search", $(this).val());
     });
 });
