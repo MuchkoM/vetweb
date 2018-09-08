@@ -83,36 +83,24 @@
                         Новое животное
                     </a>
                 </li>
-                {#                <li class="">#}
-                {#                    <a href="{% url 'vet:prevention-create' %}">#}
-                {#                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;#}
-                {#                        Новая вакцинация#}
-                {#                    </a>#}
-                {#                </li>#}
-                {#                <li class="">#}
-                {#                    <a href="{% url 'vet:therapy-create' %}">#}
-                {#                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;#}
-                {#                        Новая терапия#}
-                {#                    </a>#}
-                {#                </li>#}
-                <li class="">
-                    <a href="{% url 'account:user-register' %}">
-                        <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;
-                        Login
-                    </a>
-                </li>
-                <li class="">
-                    <a href="{% url 'account:user-logout' %}">
-                        <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;
-                        Logout
-                    </a>
-                </li>
-                <li class="">
-                    <a href="{% url "admin:index" %}">
-                        <span class="glyphicon glyphicon-flag" aria-hidden="true"></span>&nbsp;
-                        Admin
-                    </a>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="">
+                        <p class="navbar-text">Hi {{ user.username }}</p>
+                    </li>
+                    <li class="">
+                        <a href="{% url 'logout' %}">
+                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;
+                            Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="">
+                        <a href="{% url 'login' %}">
+                            <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;
+                            Login
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -120,7 +108,7 @@
 <div class="container">
     <div class="row">
         <div class="panel panel-primary">
-            <div class="panel-heading">
+            <div class="panel-heading panel-warning">
                 {% block back_button %}
                     <a href="{{ request.META.HTTP_REFERER|escape }}"
                        class="btn btn-success"
@@ -130,9 +118,9 @@
                 {% endblock %}
                 {% block panel_title %}WetVeb{% endblock %}</div>
             <div class="panel-body">{% block body %}{% endblock %}</div>
+            <div class="panel-footer">Muchkom muchkom@gamil.com</div>
         </div>
     </div>
 </div>
-
 </body>
 </html>

@@ -10,7 +10,7 @@ from . import forms
 from . import models
 
 
-class AuthRequireView:
+class AuthRequireView(LoginRequiredMixin):
     pass
 
 
@@ -31,10 +31,13 @@ class NoConfirmDeleteView(generic.DeleteView):
 class AjaxRequest:
     @classmethod
     def get_ajax(cls, request):
-        if request.is_ajax():
-            kwargs = request.GET.dict()
-            result = list(cls.get_queryset_value(kwargs))
-            data = json.dumps(result)
+        if request.user.is_authenticated:
+            if request.is_ajax():
+                kwargs = request.GET.dict()
+                result = list(cls.get_queryset_value(kwargs))
+                data = json.dumps(result)
+            else:
+                data = 'fail'
         else:
             data = 'fail'
         return HttpResponse(data, 'application/json')
@@ -68,24 +71,24 @@ class OwnerView:
 
 
 class AnimalView:
-    class Create(ParamCreateView):
+    class Create(AuthRequireView, ParamCreateView):
         form_class = forms.AnimalForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(generic.DetailView):
+    class Detail(AuthRequireView, generic.DetailView):
         model = models.Animal
         template_name = 'vet/animal/detail.html'
 
-    class List(generic.ListView):
+    class List(AuthRequireView, generic.ListView):
         model = models.Animal
         template_name = 'vet/animal/list.html'
 
-    class Update(generic.UpdateView):
+    class Update(AuthRequireView, generic.UpdateView):
         form_class = forms.AnimalForm
         model = models.Animal
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(NoConfirmDeleteView):
+    class Delete(AuthRequireView, NoConfirmDeleteView):
         model = models.Animal
 
         def get_success_url(self):
@@ -94,24 +97,24 @@ class AnimalView:
 
 
 class PreventionView:
-    class Create(ParamCreateView):
+    class Create(AuthRequireView, ParamCreateView):
         form_class = forms.PreventionForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(generic.DetailView):
+    class Detail(AuthRequireView, generic.DetailView):
         model = models.Prevention
         template_name = 'vet/prevention/detail.html'
 
-    class List(generic.ListView):
+    class List(AuthRequireView, generic.ListView):
         model = models.Prevention
         template_name = 'vet/prevention/list.html'
 
-    class Update(generic.UpdateView):
+    class Update(AuthRequireView, generic.UpdateView):
         form_class = forms.PreventionForm
         model = models.Prevention
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(NoConfirmDeleteView):
+    class Delete(AuthRequireView, NoConfirmDeleteView):
         model = models.Prevention
 
         def get_success_url(self):
@@ -120,24 +123,24 @@ class PreventionView:
 
 
 class TherapyView:
-    class Create(ParamCreateView):
+    class Create(AuthRequireView, ParamCreateView):
         form_class = forms.TherapyForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(generic.DetailView):
+    class Detail(AuthRequireView, generic.DetailView):
         model = models.Therapy
         template_name = 'vet/therapy/detail.html'
 
-    class List(generic.ListView):
+    class List(AuthRequireView, generic.ListView):
         model = models.Therapy
         template_name = 'vet/therapy/list.html'
 
-    class Update(generic.UpdateView):
+    class Update(AuthRequireView, generic.UpdateView):
         form_class = forms.TherapyForm
         model = models.Therapy
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(NoConfirmDeleteView):
+    class Delete(AuthRequireView, NoConfirmDeleteView):
         model = models.Therapy
 
         def get_success_url(self):
