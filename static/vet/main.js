@@ -70,4 +70,6 @@ $(function () {
         $(this).select();
         $(this).autocomplete("search", $(this).val());
     });
+	let pathname = window.location.pathname;
+	$('#topNavBar .nav-link[href="'+pathname+'"]').parent().addClass('active');
 });

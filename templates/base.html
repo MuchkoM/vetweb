@@ -27,7 +27,7 @@
     <title> {% block title %}WetVeb{% endblock %}</title>
 </head>
 <body>
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="countainer-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle='collapse' data-target="#topNavBar">
@@ -35,69 +35,64 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'vet:owner-list' %}">VetWeb</a>
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'favicon.ico' %}" height="100%" alt="brand">
+            </a>
         </div>
         <div class="collapse navbar-collapse" id="topNavBar">
             <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="{% url 'vet:owner-list' %}">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vet:owner-list' %}">
                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;
                         Владельцы
                     </a>
                 </li>
-                <li class="">
-                    <a href="{% url 'vet:animal-list' %}">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vet:animal-list' %}">
                         <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>&nbsp;
                         Животные
                     </a>
                 </li>
-                <li class="">
-                    <a href="{% url 'vet:prevention-list' %}">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vet:prevention-list' %}">
                         <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>&nbsp;
                         Вакцинация
                     </a>
                 </li>
-                <li class="">
-                    <a href="{% url 'vet:therapy-list' %}">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'vet:therapy-list' %}">
                         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;
                         Терапия
                     </a>
                 </li>
             </ul>
-            {#            <form class="navbar-form navbar-left" role="search" method="get" action="#">#}
-            {#                      <div class="form-group">#}
-            {#                          <input type="text" class="form-control" name="q" value="">#}
-            {#                      </div>#}
-            {#                      <button type="submit" class="btn btn-default">Search</button>#}
-            {#                  </form>#}
             <ul class="nav navbar-nav navbar-right">
-                <li class="">
-                    <a href="{% url 'vet:owner-create' %}">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-                        Новый владелец
-                    </a>
-                </li>
-                <li class="">
-                    <a href="{% url 'vet:animal-create' %}">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-                        Новое животное
-                    </a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'vet:owner-create' %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+                    Новый владелец
+                </a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'vet:animal-create' %}">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+                    Новое животное
+                </a></li>
                 {% if user.is_authenticated %}
-                    <li class="">
-                        <p class="navbar-text">Hi {{ user.username }}</p>
+                    <li class="nav-item">
+                        <p class="navbar-text">
+                            Hi {{ user.username }}
+                        </p>
                     </li>
-                    <li class="">
-                        <a href="{% url 'logout' %}">
-                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;
-                            Logout
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <span class="glyphicon glyphicon-log-in"></span>
+                            Logout&nbsp;&nbsp;&nbsp;
                         </a>
                     </li>
+
                 {% else %}
-                    <li class="">
-                        <a href="{% url 'login' %}">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">
                             <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;
-                            Login
+                            Login&nbsp;&nbsp;&nbsp;
                         </a>
                     </li>
                 {% endif %}
@@ -105,7 +100,7 @@
         </div>
     </div>
 </nav>
-<div class="container">
+<main class="container-fluid">
     <div class="row">
         <div class="panel panel-primary">
             <div class="panel-heading panel-warning">
@@ -118,9 +113,23 @@
                 {% endblock %}
                 {% block panel_title %}WetVeb{% endblock %}</div>
             <div class="panel-body">{% block body %}{% endblock %}</div>
-            <div class="panel-footer">Muchkom muchkom@gamil.com</div>
         </div>
     </div>
-</div>
+</main>
+<footer class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container-fluid">
+        <ul class="nav navbar-nav">
+            <li class="nav-item">
+                <p class="navbar-text">VetWeb</p>
+            </li>
+            <li class="nav-item">
+                <p class="navbar-text">База клиентов и питомцев ветклиники</p>
+            </li>
+            <li class="nav-item">
+                <p class="navbar-text">muchkom@gmail.com</p>
+            </li>
+        </ul>
+    </div>
+</footer>
 </body>
 </html>

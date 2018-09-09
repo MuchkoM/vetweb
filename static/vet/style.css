@@ -1,4 +1,11 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 body {
+    margin-top: 60px;
+    margin-bottom: 60px;
     background: white url("images/background.png");
 }
 
@@ -8,6 +15,10 @@ body {
 
 .navbar-brand {
     font-family: "Satisfy", cursive;
+}
+
+.navbar-text {
+    padding-top: 1px;
 }
 
 .ui-datepicker select {
@@ -28,5 +39,6 @@ select {
     padding: 2px 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 175px;
+    width: 182px;
 }
+
