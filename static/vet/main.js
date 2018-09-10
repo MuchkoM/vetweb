@@ -70,6 +70,21 @@ $(function () {
         $(this).select();
         $(this).autocomplete("search", $(this).val());
     });
-	let pathname = window.location.pathname;
-	$('#topNavBar .nav-link[href="'+pathname+'"]').parent().addClass('active');
+    let pathname = window.location.pathname;
+    $('#topNavBar .nav-link[href="' + pathname + '"]').parent().addClass('active');
+    $(".add").click(function () {
+        let value = $('#add').text();
+        let url = urls['diagnosis-create'];
+        console.log([value, url]);
+        if (value !== '') {
+            $.get(url, {'value': value});
+            location.reload();
+        }
+    });
+    $(".update").click(function () {
+        let pk = $(this).val();
+        let value = $('#' + pk).text();
+        let url = urls['diagnosis-update'].slice(0, -1) + pk;
+        $.get(url, {'value': value});
+    });
 });

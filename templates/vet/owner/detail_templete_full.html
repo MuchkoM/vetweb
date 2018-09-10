@@ -1,4 +1,5 @@
-<strong>Владелец: </strong>{{ owner.fio }}<br>
-<strong>Адрес: </strong> <info>{{ owner.address }}</info><br>
-<strong>Телефон </strong> <info>{{ owner.phone }}</info><br>
-<strong>Эл. почта: </strong> <info>{{ owner.email }}</info><br>
+{% load i18n %}
+<strong>{% trans "Владелец:" %} </strong>{{ owner.fio }}<br>
+<strong>{% trans "Адрес:" %} </strong> <info>{{ owner.address }}</info><br>
+<strong>{% trans "Телефон:" %} </strong> <info>{{ owner.phone }}</info><br>
+<strong>Email: </strong><info>{{ owner.email }}</info><br>

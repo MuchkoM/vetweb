@@ -1,0 +1,36 @@
+<div class="container-fluid">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Диагноз</th>
+            <th>Действие</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for diagnosis in object_list %}
+            <tr>
+                <td contenteditable="true" class="diagnosis"
+                    id="{{ diagnosis.pk }}">{{ diagnosis.value }}</td>
+                <td>
+                    <button type="button"
+                            value="{{ diagnosis.pk }}"
+                            class="btn btn-warning btn-sm  update">Обновить
+                    </button>
+                    <button onclick="location.href='{% url 'vet:diagnosis-delete' diagnosis.pk %}'"
+                            type="button"
+                            class="btn btn-danger btn-sm">Удалить
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td contenteditable="true" id='add'></td>
+            <td>
+                <button type="button" class="btn btn-success btn-sm add">
+                    Добавить
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

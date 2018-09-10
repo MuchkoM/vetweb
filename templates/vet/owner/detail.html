@@ -3,17 +3,17 @@
 {% block panel_title %}{% block title %}Информация о владельце{% endblock %}{% endblock %}
 {% block back_button %}
     <a href="{% url 'vet:owner-list' %}" class="btn btn-success" role="button">
-        Список владельцев
+        {% blocktrans %}Список владельцев{% endblocktrans %}
     </a>
 {% endblock %}
 {% block body %}
     <div class="panel panel-info">
         <div class="panel-heading">
             <a href="{% url 'vet:owner-update' object.pk %}" class="btn btn-warning" role="button">
-                Обновить информацию о владельце
+                {% blocktrans %}Обновить информацию о владельце{% endblocktrans %}
             </a>
             <a href="{% url 'vet:owner-delete' object.pk %}" class="btn btn-danger" role="button">
-                Удалить владельца из базы
+                {% blocktrans %}Удалить владельца из базы{% endblocktrans %}
             </a>
         </div>
         <div class="panel-body">
@@ -23,7 +23,7 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <a href="{% url 'vet:animal-create-owner' object.pk %}" class="btn btn-success" role="button">
-                Добавить питомец владельцу
+                {% blocktrans %}Добавить питомец владельцу{% endblocktrans %}
             </a>
             {% blocktrans %}Список питомцев владельца{% endblocktrans %}
         </div>

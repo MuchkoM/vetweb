@@ -9,7 +9,7 @@
         </thead>
         <tbody>
         {% for therapy in object_list %}
-            <tr onclick="window.location='{% url 'vet:prevention-detail' therapy.pk %}';">
+            <tr onclick="window.location='{% url 'vet:therapy-detail' therapy.pk %}';">
                 <td>
                     <info>{{ therapy.animal.name }}</info>
                 </td>
@@ -17,7 +17,7 @@
                     <info>{{ therapy.date }}</info>
                 </td>
                 <td>
-                    <info>{{ therapy.diagnosis}}</info>
+                    <info>{{ therapy.get_diagnosis }}</info>
                 </td>
             </tr>
         {% endfor %}

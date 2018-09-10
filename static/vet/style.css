@@ -2,9 +2,11 @@ html {
     position: relative;
     min-height: 100%;
 }
-html,body{
+
+html, body {
     height: 100%
 }
+
 body {
     margin-top: 60px;
     margin-bottom: 60px;
@@ -24,21 +26,28 @@ body {
     height: 25px;
 }
 
+.autocomplete:not([disabled]){
+    background-image: url("images/choice.jpg");
+    background-position: 97% center;
+    background-repeat: no-repeat;
+}
+
 select {
     -webkit-appearance: button;
     -webkit-border-radius: 2px;
     -webkit-padding-end: 20px;
     -webkit-padding-start: 2px;
     -webkit-user-select: none;
-    background-image: url(http://i62.tinypic.com/15xvbd5.png);
+    background-image: url("images/choice.jpg");
     background-position: 97% center;
     background-repeat: no-repeat;
     overflow: hidden;
     padding: 2px 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 182px;
+    width: 175px;
 }
+
 tr[onclick]:hover {
-     cursor: pointer;
+    cursor: pointer;
 }

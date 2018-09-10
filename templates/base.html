@@ -22,6 +22,10 @@
             'diagnosis': "{% url 'vet:ajax-diagnosis' %}",
             'subspecies': "{% url 'vet:ajax-subspecies' %}",
             'vaccination': "{% url 'vet:ajax-vaccination' %}",
+        };
+        let urls = {
+            'diagnosis-create': "{% url 'vet:diagnosis-create' %}",
+            'diagnosis-update': '{% url 'vet:diagnosis-update' 0 %}',
         }
     </script>
     <meta charset="UTF-8">
@@ -94,13 +98,39 @@
                         </li>
                     </ul>
                 </li>
+                {# todo Добавить таблицы для ускорителей #}
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-haspopup="true" aria-expanded="true">
+                        {% trans "*Ускорители" %} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>&nbsp;
+                                {% trans "*Вид, порода" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>&nbsp;
+                                {% trans "*Прививки" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:diagnosis-list' %}">
+                                <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>&nbsp;
+                                {% trans "Диагнозы" %}
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
             {# todo Сделать поиск #}
             <form class="nav-item navbar-form navbar-left" action="#">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder={% trans "Поиск" %}>
+                    <input type="text" class="form-control" placeholder={% trans "*Поиск" %}>
                 </div>
-                <button type="submit" class="btn btn-default">{% trans "Поиск" %}</button>
+                <button type="submit" class="btn btn-default">{% trans "*Поиск" %}</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}

@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -146,6 +147,32 @@ class TherapyView:
         def get_success_url(self):
             animal_pk = self.object.animal.pk
             return reverse_lazy('vet:animal-detail', kwargs={'pk': animal_pk})
+
+
+class DiagnosisView:
+    @staticmethod
+    def create(request):
+        value = request.GET['value']
+        models.Diagnosis.objects.get_or_create(value=value)
+        return HttpResponse('')
+
+    @staticmethod
+    def update(request, pk):
+        value = request.GET['value']
+        diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
+        diagnosis.value = value
+        diagnosis.save()
+        return HttpResponse('')
+
+    class List(AuthRequireView, generic.ListView):
+        model = models.Diagnosis
+        template_name = 'vet/diagnosis/list.html'
+
+    @staticmethod
+    def delete(request, pk):
+        diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
+        diagnosis.delete()
+        return redirect(reverse_lazy('vet:diagnosis-list'))
 
 
 class Ajax:

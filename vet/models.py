@@ -133,6 +133,9 @@ class AnimalProcedures(models.Model):
     def __str__(self):
         return f'{self.procedure_type} {self.date}'
 
+    def get_absolute_url(self):
+        return reverse('vet:animal-detail', kwargs={'pk': self.animal.pk})
+
     class Meta:
         abstract = True
         ordering = ["date"]
@@ -156,14 +159,11 @@ class Prevention(AnimalProcedures):
         (TYPE_AGAIN, _('Повторная')),
         (TYPE_REPEAT, _('Ревакцинация')),
     )
-    vaccination = models.ForeignKey(Vaccination, verbose_name=_('Прививка'),
-                                    on_delete=models.CASCADE)
+    vaccination = models.ForeignKey(Vaccination, null=True, verbose_name=_('Прививка'),
+                                    on_delete=models.SET_NULL)
     type_vaccination = models.CharField(verbose_name=_('Тип прививки'), max_length=1,
                                         choices=TYPE_CHOICE,
                                         default=TYPE_FIRST)
-
-    def get_absolute_url(self):
-        return reverse('vet:prevention-detail', kwargs={'pk': self.pk})
 
 
 class Therapy(AnimalProcedures):
@@ -179,8 +179,8 @@ class Therapy(AnimalProcedures):
                             default=THERAPY_CLINIC)
     symptomatic = models.CharField(verbose_name=_('Симптомы'), max_length=100, blank=True)
     labs = models.CharField(verbose_name=_('Исследования'), max_length=100, blank=True)
-    diagnosis = models.ForeignKey(Diagnosis, verbose_name=_('Диагноз'),
-                                  on_delete=models.CASCADE)
+    diagnosis = models.ForeignKey(Diagnosis, null=True, verbose_name=_('Диагноз'),
+                                  on_delete=models.SET_NULL)
 
-    def get_absolute_url(self):
-        return reverse('vet:therapy-detail', kwargs={'pk': self.pk})
+    def get_diagnosis(self):
+        return self.diagnosis.value if self.diagnosis is not None else ''

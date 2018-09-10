@@ -1,11 +1,12 @@
+{% load i18n %}
 <div class="container-fluid">
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Имя</th>
-            <th>Возвараст</th>
-            <th>Пол</th>
-            <th>Вид</th>
+            <th>{% blocktrans %}Имя питомца{% endblocktrans %}</th>
+            <th>{% trans "Возвараст" %}</th>
+            <th>{% trans "Пол" %}</th>
+            <th>{% trans "Вид" %}</th>
         </tr>
         </thead>
         <tbody>

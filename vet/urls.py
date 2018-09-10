@@ -1,5 +1,4 @@
 from django.urls import path, include
-from django.views.generic import RedirectView
 
 from . import views
 
@@ -43,11 +42,17 @@ url_ajax = [
     path('subspecies/', views.Ajax.Subspecies.get_ajax, name='ajax-subspecies'),
     path('vaccination/', views.Ajax.Vaccination.get_ajax, name='ajax-vaccination'),
 ]
-
+url_diagnosis = [
+    path('', views.DiagnosisView.List.as_view(), name='diagnosis-list'),
+    path('add/', views.DiagnosisView.create, name='diagnosis-create'),
+    path('update/<int:pk>', views.DiagnosisView.update, name='diagnosis-update'),
+    path('delete/<int:pk>', views.DiagnosisView.delete, name='diagnosis-delete'),
+]
 urlpatterns = [
     path('ajax/', include(url_ajax)),
     path('owner/', include(url_owner)),
     path('animal/', include(url_animal)),
     path('therapy/', include(url_therapy)),
+    path('diagnosis/', include(url_diagnosis)),
     path('prevention/', include(url_prevention)),
 ]

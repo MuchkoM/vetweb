@@ -177,7 +177,7 @@ class TherapyForm(AnimalProceduresForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance_update is not None:
-            self.initial['diagnosis'] = self.instance_update.diagnosis.value
+            self.initial['diagnosis'] = self.instance_update.get_diagnosis()
 
     diagnosis = AutocompleteCharField(label=_('Диагноз'), max_length=40)
 

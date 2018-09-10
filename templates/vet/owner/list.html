@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
-{% block panel_title %}{% block title %}Список всех владельцев{% endblock %}{% endblock %}
+{% load i18n %}
+{% block panel_title %}{% blocktrans %}Список всех владельцев{% endblocktrans %}{% endblock %}
+{% block title %}{% trans "Владельцы" %}{% endblock %}
 {% block back_button %}
     <a href="{% url 'vet:owner-create' %}" class="btn btn-success" role="button">
-        Добавить владельца
+        {% blocktrans %}Добавить владельца{% endblocktrans %}
     </a>
 {% endblock %}
 {% block body %}
