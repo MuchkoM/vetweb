@@ -1,10 +1,5 @@
 {% extends 'base.html' %}
 {% block panel_title %}{% block title %}Список всех вакцинаций{% endblock %}{% endblock %}
-{% block back_button %}
-    <a href="{% url 'vet:prevention-create' %}" class="btn btn-success" role="button">
-        Добавить вакцинацию
-    </a>
-{% endblock %}
 {% block body %}
     {% include 'vet/prevention/list_template_preview.html' %}
 {% endblock %}

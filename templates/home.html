@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block panel_title %}{% block title %}VetWeb{% endblock %}{% endblock %}
+{% block back_button %}{% endblock %}
+{% block body %}
+    <h1>База данных для клиники</h1>
+    <p>База состоит из информации о владельцах, о животных и о медецикских процедурах животных</p>
+    {% if user.is_authenticated %}
+        <p>Здраствуйте {{ user.username }}</p>
+        <p>Для дальнейшей работы выберите нужный пункт в меню или произвести поиск по базе</p>
+        <p>Вы можете разлогинится <a href="{% url 'logout' %}">Logout</a></p>
+    {% else %}
+        <p>Для дальнейшей работы нужно залогинится <a href="{% url 'login' %}">Login</a></p>
+    {% endif %}
+{% endblock %}

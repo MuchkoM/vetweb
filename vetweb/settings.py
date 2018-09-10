@@ -28,7 +28,7 @@ SECRET_KEY = 'g9k)6((ww4^tw&k)!n459*_p@j%(4u3z=ik^)d$nf%aepm%lc@'
 DEBUG = True
 
 LOGIN_URL = reverse_lazy('login')
-
+LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
 ALLOWED_HOSTS = ['muchkom.pythonanywhere.com', '127.0.0.1']

@@ -50,5 +50,4 @@ urlpatterns = [
     path('animal/', include(url_animal)),
     path('therapy/', include(url_therapy)),
     path('prevention/', include(url_prevention)),
-    path('', RedirectView.as_view(pattern_name='vet:owner-list', permanent=False)),
 ]

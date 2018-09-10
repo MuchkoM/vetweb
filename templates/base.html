@@ -1,15 +1,16 @@
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Satisfy'>
     <link rel="stylesheet" href="{% static 'vet/style.css' %}"/>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/ru.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/i18n/jquery-ui-i18n.min.js"></script>
@@ -35,66 +36,96 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">
-                <img src="{% static 'favicon.ico' %}" height="100%" alt="brand">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <span><img src="{% static 'favicon.ico' %}" height="100%"/></span>
+                VetWeb
             </a>
         </div>
         <div class="collapse navbar-collapse" id="topNavBar">
             <ul class="nav navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vet:owner-list' %}">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;
-                        Владельцы
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-haspopup="true" aria-expanded="true">
+                        Списки <span class="caret"></span>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:owner-list' %}">
+                                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp;
+                                {% trans "Владельцы" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:animal-list' %}">
+                                <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>&nbsp;
+                                {% trans "Питомцы" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:prevention-list' %}">
+                                <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>&nbsp;
+                                {% trans "Вакцинация" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:therapy-list' %}">
+                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;
+                                {% trans "Терапия" %}
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vet:animal-list' %}">
-                        <span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span>&nbsp;
-                        Животные
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vet:prevention-list' %}">
-                        <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>&nbsp;
-                        Вакцинация
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'vet:therapy-list' %}">
-                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;
-                        Терапия
-                    </a>
+                <li class="nav-item dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                       role="button" aria-haspopup="true" aria-expanded="true">
+                        Добавить <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:owner-create' %}">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+                                {% trans "Владельца" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'vet:animal-create' %}">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
+                                {% trans "Питомца" %}
+                            </a>
+                        </li>
+                    </ul>
                 </li>
             </ul>
+            {# todo Сделать поиск #}
+            <form class="nav-item navbar-form navbar-left" action="#">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder={% trans "Поиск" %}>
+                </div>
+                <button type="submit" class="btn btn-default">{% trans "Поиск" %}</button>
+            </form>
             <ul class="nav navbar-nav navbar-right">
-                <li class="nav-item"><a class="nav-link" href="{% url 'vet:owner-create' %}">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-                    Новый владелец
-                </a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'vet:animal-create' %}">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;
-                    Новое животное
-                </a></li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <p class="navbar-text">
-                            Hi {{ user.username }}
+                            {{ user.username }}
                         </p>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">
-                            <span class="glyphicon glyphicon-log-in"></span>
-                            Logout&nbsp;&nbsp;&nbsp;
+                            <span class="glyphicon glyphicon-log-out"></span>
+                            Logout
                         </a>
                     </li>
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">
-                            <span class="glyphicon glyphicon-play-circle" aria-hidden="true"></span>&nbsp;
-                            Login&nbsp;&nbsp;&nbsp;
+                            Login
+                            <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
                         </a>
                     </li>
                 {% endif %}
+                <li class="nav-item">
+                    <p class="navbar-text"></p>
+                </li>
             </ul>
         </div>
     </div>
@@ -107,7 +138,7 @@
                     <a href="{{ request.META.HTTP_REFERER|escape }}"
                        class="btn btn-success"
                        role="button">
-                        Назад
+                        {% trans "Назад" %}
                     </a>
                 {% endblock %}
                 {% block panel_title %}WetVeb{% endblock %}</div>
@@ -122,7 +153,7 @@
                 <p class="navbar-text">VetWeb</p>
             </li>
             <li class="nav-item">
-                <p class="navbar-text">База клиентов и питомцев ветклиники</p>
+                <p class="navbar-text">{% blocktrans %}База клиентов и питомцев ветклиники{% endblocktrans %}</p>
             </li>
             <li class="nav-item">
                 <p class="navbar-text">muchkom@gmail.com</p>
