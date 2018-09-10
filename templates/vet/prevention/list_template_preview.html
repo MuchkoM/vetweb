@@ -1,12 +1,30 @@
-{% for prevention in object_list %}
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <a href="{% url 'vet:prevention-detail' prevention.pk %}" class="btn btn-info" role="button">
-                Подробнее
-            </a>
-        </div>
-        <div class="panel-body">
-            {% include 'vet/prevention/detail_template_full.html' %}
-        </div>
-    </div>
-{% endfor %}
+<div class="container-fluid">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Имя животного</th>
+            <th>Дата прививки</th>
+            <th>Прививка</th>
+            <th>Тип прививки</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for prevention in object_list %}
+            <tr onclick="window.location='{% url 'vet:prevention-detail' prevention.pk %}';">
+                <td>
+                    <info>{{ prevention.animal.name }}</info>
+                </td>
+                <td>
+                    <info>{{ prevention.date }}</info>
+                </td>
+                <td>
+                    <info>{{ prevention.vaccination }}</info>
+                </td>
+                <td>
+                    <info>{{ prevention.get_type_vaccination_display }}</info>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

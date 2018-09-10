@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -87,7 +87,6 @@
                             Logout&nbsp;&nbsp;&nbsp;
                         </a>
                     </li>
-
                 {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">

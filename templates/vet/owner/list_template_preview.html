@@ -1,21 +1,28 @@
-{% for owner in object_list %}
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <a href="{% url 'vet:owner-detail' owner.pk %}" class="btn btn-info" role="button">
-                Подробнее о владельце
-            </a>
-            <a href="{% url 'vet:animal-create-owner' owner.pk %}" class="btn btn-success" role="button">
-                Добавить животное владельцу
-            </a>
-            <a href="{% url 'vet:owner-update' owner.pk %}" class="btn btn-warning" role="button">
-                Обновить информацию о владельце
-            </a>
-            <a href="{% url 'vet:owner-delete' owner.pk %}" class="btn btn-danger" role="button">
-                Удалить владельца из базы
-            </a>
-        </div>
-        <div class="panel-body">
-            {% include 'vet/owner/detail_templete_preview.html' %}
-        </div>
-    </div>
-{% endfor %}
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Адрес</th>
+            <th>Телефон</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for owner in object_list %}
+            <tr onclick="window.location='{% url "vet:owner-detail" owner.pk %}';">
+                <td>{{ owner.fio }}</td>
+                <td>
+                    <info>{{ owner.address }}</info>
+                </td>
+                <td>
+                    <info>{{ owner.phone }}</info>
+                </td>
+                <td>
+                    <info>{{ owner.email }}</info>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

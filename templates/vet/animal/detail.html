@@ -28,12 +28,7 @@
                         Вакцинации
                     </div>
                     <div class="panel-body">
-                        {% for prevention in object.prevention_set.all %}
-                            <a href="{% url 'vet:prevention-detail' prevention.pk %}">
-                                {% include 'vet/prevention/detail_template_preview.html' %}
-                            </a>
-                            <br>
-                        {% endfor %}
+                        {% include 'vet/prevention/list_template_preview.html' with object_list=object.prevention_set.all %}
                     </div>
                 </div>
             </div>
@@ -46,12 +41,7 @@
                         Терапия
                     </div>
                     <div class="panel-body">
-                        {% for therapy in object.therapy_set.all %}
-                            <a href="{% url 'vet:therapy-detail' therapy.pk %}">
-                                {% include 'vet/therapy/detail_template_preview.html' %}
-                            </a>
-                            <br>
-                        {% endfor %}
+                        {% include 'vet/therapy/list_template_preview.html' with object_list=object.therapy_set.all %}
                     </div>
                 </div>
             </div>

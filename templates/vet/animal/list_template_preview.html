@@ -1,12 +1,24 @@
-{% for animal in object_list %}
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <a href="{% url 'vet:animal-detail' animal.pk %}" class="btn btn-info" role="button">
-                Подробнее
-            </a>
-        </div>
-        <div class="panel-body">
-            {% include 'vet/animal/detail_template_preview.html' %}
-        </div>
-    </div>
-{% endfor %}
+<div class="container-fluid">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Возвараст</th>
+            <th>Пол</th>
+            <th>Вид</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for animal in object_list %}
+            <tr onclick="window.location='{% url "vet:animal-detail" animal.pk %}';">
+                <td>{{ animal.name }}</td>
+                <td>
+                    <age>{{ animal.date }}</age>
+                </td>
+                <td>{{ animal.get_gender_display }}</td>
+                <td>{{ animal.species.value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block panel_title %}{% block title %}Информация о владельце{% endblock %}{% endblock %}
 {% block back_button %}
     <a href="{% url 'vet:owner-list' %}" class="btn btn-success" role="button">
@@ -22,12 +23,10 @@
     <div class="panel panel-info">
         <div class="panel-heading">
             <a href="{% url 'vet:animal-create-owner' object.pk %}" class="btn btn-success" role="button">
-                Добавить животное владельцу
+                Добавить питомец владельцу
             </a>
-            Список животных владельца
+            {% blocktrans %}Список питомцев владельца{% endblocktrans %}
         </div>
-        <div class="panel-body">
-            {% include 'vet/animal/list_template_preview.html' with object_list=object.animal_set.all %}
-        </div>
+        {% include 'vet/animal/list_template_preview.html' with object_list=object.animal_set.all %}
     </div>
 {% endblock %}
