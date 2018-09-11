@@ -107,16 +107,15 @@
                         </li>
                     </ul>
                 </li>
-                {# todo Добавить таблицы для ускорителей #}
                 <li class="nav-item dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                        role="button" aria-haspopup="true" aria-expanded="true">
-                        {% trans "*Ускорители" %} <span class="caret"></span></a>
+                        {% trans "Ускорители" %} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{% url 'vet:species_subspecies-list' %}">
                                 <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>&nbsp;
-                                {% trans "*Вид, порода" %}
+                                {% trans "Вид, порода" %}
                             </a>
                         </li>
                         <li class="nav-item">
@@ -134,12 +133,12 @@
                     </ul>
                 </li>
             </ul>
-            {# todo Сделать поиск #}
-            <form class="nav-item navbar-form navbar-left" action="#">
+            <form action="{% url 'vet:search' %}"
+                  class=" nav-item navbar-form navbar-left search form-input" role="search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder={% trans "*Поиск" %}>
+                    <input type="search" class="form-control"  name="q" placeholder={% trans "Поиск" %} id="id_q">
                 </div>
-                <button type="submit" class="btn btn-default">{% trans "*Поиск" %}</button>
+                <button type="submit" class="btn btn-default">{% trans "Поиск" %}</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
