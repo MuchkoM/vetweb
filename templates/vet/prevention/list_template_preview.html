@@ -12,16 +12,16 @@
         {% for prevention in object_list %}
             <tr onclick="window.location='{% url 'vet:prevention-detail' prevention.pk %}';">
                 <td>
-                    <info>{{ prevention.animal.name }}</info>
+                    {{ prevention.animal.name }}
                 </td>
                 <td>
-                    <info>{{ prevention.date }}</info>
+                    {{ prevention.date }}
                 </td>
                 <td>
-                    <info>{{ prevention.vaccination }}</info>
+                    <info>{{ prevention.get_vaccination }}</info>
                 </td>
                 <td>
-                    <info>{{ prevention.get_type_vaccination_display }}</info>
+                    {{ prevention.get_type_vaccination_display }}
                 </td>
             </tr>
         {% endfor %}

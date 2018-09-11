@@ -157,7 +157,7 @@ class PreventionForm(AnimalProceduresForm):
         super().__init__(*args, **kwargs)
 
         if self.instance_update is not None:
-            self.initial['vaccination'] = self.instance_update.vaccination.value
+            self.initial['vaccination'] = self.instance_update.get_vaccination()
 
     vaccination = AutocompleteCharField(label=_('Вакцина'), max_length=40)
 

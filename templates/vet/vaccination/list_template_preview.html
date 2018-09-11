@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="container-fluid">
-    <table class="table table-hover">
+    <table class="table table-hover" data-model-name="vaccination">
         <thead>
         <tr>
             <th>{% trans "Вакцина" %}</th>
@@ -9,27 +9,18 @@
         </thead>
         <tbody>
         {% for vaccination in object_list %}
-            <tr>
-                <td contenteditable="true" class="vaccination"
-                    id="{{ vaccination.pk }}">{{ vaccination.value }}</td>
+            <tr id="{{ vaccination.pk }}">
+                <td contenteditable="true">{{ vaccination.value }}</td>
                 <td>
-                    <button type="button"
-                            value="{{ vaccination.pk }}"
-                            class="btn btn-warning btn-sm update">{% trans "Обновить" %}
-                    </button>
-                    <button onclick="location.href='{% url 'vet:vaccination-delete' vaccination.pk %}'"
-                            type="button"
-                            class="btn btn-danger btn-sm delete">{% trans "Удалить" %}
-                    </button>
+                    <button type="button" class="btn btn-warning btn-sm update">{% trans "Обновить" %}</button>
+                    <button type="button" class="btn btn-danger btn-sm delete">{% trans "Удалить" %}</button>
                 </td>
             </tr>
         {% endfor %}
         <tr>
-            <td contenteditable="true" id='add'></td>
+            <td contenteditable="true"></td>
             <td>
-                <button type="button" class="btn btn-success btn-sm add">
-                    {% trans "Добавить" %}
-                </button>
+                <button type="button" class="btn btn-success btn-sm add">{% trans "Добавить" %}</button>
             </td>
         </tr>
         </tbody>

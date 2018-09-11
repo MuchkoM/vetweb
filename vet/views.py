@@ -172,7 +172,7 @@ class DiagnosisView:
     def delete(request, pk):
         diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
         diagnosis.delete()
-        return redirect(reverse_lazy('vet:diagnosis-list'))
+        return HttpResponse('')
 
 
 class VaccinationView:
@@ -198,7 +198,7 @@ class VaccinationView:
     def delete(request, pk):
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
         vaccination.delete()
-        return redirect(reverse_lazy('vet:vaccination-list'))
+        return HttpResponse('')
 
 
 class Ajax:

@@ -23,12 +23,18 @@
             'subspecies': "{% url 'vet:ajax-subspecies' %}",
             'vaccination': "{% url 'vet:ajax-vaccination' %}",
         };
-        let urls = {
-            'diagnosis-create': "{% url 'vet:diagnosis-create' %}",
-            'diagnosis-update': '{% url 'vet:diagnosis-update' 0 %}',
-            'vaccination-create': "{% url 'vet:vaccination-create' %}",
-            'vaccination-update': '{% url 'vet:vaccination-update' 0 %}',
-        }
+        let url_accelerate = {
+            'diagnosis': {
+                'create': "{% url 'vet:diagnosis-create' %}",
+                'update': '{% url 'vet:diagnosis-update' 0 %}',
+                'delete': '{% url 'vet:diagnosis-delete' 0 %}',
+            },
+            'vaccination': {
+                'create': "{% url 'vet:vaccination-create' %}",
+                'update': '{% url 'vet:vaccination-update' 0 %}',
+                'delete': '{% url 'vet:vaccination-delete' 0 %}',
+            },
+        };
     </script>
     <script src="{% static 'vet/main.js' %}"></script>
     <meta charset="UTF-8">

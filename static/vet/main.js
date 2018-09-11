@@ -72,20 +72,34 @@ $(function () {
     });
     let pathname = window.location.pathname;
     $('#topNavBar .nav-link[href="' + pathname + '"]').parent().addClass('active');
-
-    $(".add").click(function () {
-        let value = $('#add').text();
-        let url = urls['diagnosis-create'];
-        console.log([value, url]);
+    $("button.add").click(function () {
+        let type = $(this).parents('table').attr('data-model-name');
+        let $tr = $(this).parents('tr');
+        let value = $tr.children(":first").text();
+        let url = url_accelerate[type]['create'];
         if (value !== '') {
-            $.get(url, {'value': value});
-            location.reload();
+            $.get(url, {'value': value}, function () {
+                location.reload();
+            });
         }
     });
-    $(".update").click(function () {
-        let pk = $(this).val();
-        let value = $('#' + pk).text();
-        let url = urls['diagnosis-update'].slice(0, -1) + pk;
-        $.get(url, {'value': value});
+    $("button.update").click(function () {
+        let type = $(this).parents('table').attr('data-model-name');
+        let $tr = $(this).parents('tr');
+        let pk = $tr.attr('id');
+        let value = $tr.children(":first").text();
+        let url = url_accelerate[type]['update'].slice(0, -1) + pk;
+        $.get(url, {'value': value}, function () {
+            location.reload();
+        });
+    });
+    $("button.delete").click(function () {
+        let type = $(this).parents('table').attr('data-model-name');
+        let $tr = $(this).parents('tr');
+        let pk = $tr.attr('id');
+        let url = url_accelerate[type]['delete'].slice(0, -1) + pk;
+        $.get(url, function () {
+            location.reload();
+        });
     });
 });

@@ -1,23 +1,24 @@
+{% load i18n %}
 <div class="container-fluid">
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Имя животного</th>
-            <th>Дата приёма</th>
-            <th>Диагноз</th>
+            <th>{% blocktrans %}Имя животного{% endblocktrans %}</th>
+            <th>{% blocktrans %}Дата приёма{% endblocktrans %}</th>
+            <th>{% trans "Диагноз" %}</th>
         </tr>
         </thead>
         <tbody>
         {% for therapy in object_list %}
             <tr onclick="window.location='{% url 'vet:therapy-detail' therapy.pk %}';">
                 <td>
-                    <info>{{ therapy.animal.name }}</info>
+                    {{ therapy.animal.name }}
                 </td>
                 <td>
-                    <info>{{ therapy.date }}</info>
+                    {{ therapy.date }}
                 </td>
                 <td>
-                    <info>{{ therapy.get_diagnosis }}</info>
+                    {{ therapy.get_diagnosis }}
                 </td>
             </tr>
         {% endfor %}

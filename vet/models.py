@@ -127,7 +127,7 @@ class Animal(models.Model):
 
 class AnimalProcedures(models.Model):
     animal = models.ForeignKey(Animal, verbose_name=_('Животное'), on_delete=models.CASCADE)
-    date = models.DateField(verbose_name=_('Дата прививки'), blank=False, default=date.today)
+    date = models.DateField(verbose_name=_('Дата'), blank=False, default=date.today)
     procedure_type = None
 
     def __str__(self):
@@ -164,6 +164,9 @@ class Prevention(AnimalProcedures):
     type_vaccination = models.CharField(verbose_name=_('Тип прививки'), max_length=1,
                                         choices=TYPE_CHOICE,
                                         default=TYPE_FIRST)
+
+    def get_vaccination(self):
+        return self.vaccination.value if self.vaccination is not None else ''
 
 
 class Therapy(AnimalProcedures):
