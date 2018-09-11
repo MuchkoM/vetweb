@@ -54,6 +54,12 @@ url_vaccination = [
     path('update/<int:pk>', views.VaccinationView.update, name='vaccination-update'),
     path('delete/<int:pk>', views.VaccinationView.delete, name='vaccination-delete'),
 ]
+url_species_subspecies = [
+    path('add/', views.SpeciesSubspeciesView.create, name='species_subspecies-create'),
+    path('', views.SpeciesSubspeciesView.List.as_view(), name='species_subspecies-list'),
+    path('update/<int:pk>', views.SpeciesSubspeciesView.update, name='species_subspecies-update'),
+    path('delete/<int:pk>', views.SpeciesSubspeciesView.delete, name='species_subspecies-delete'),
+]
 urlpatterns = [
     path('ajax/', include(url_ajax)),
     path('owner/', include(url_owner)),
@@ -62,4 +68,6 @@ urlpatterns = [
     path('diagnosis/', include(url_diagnosis)),
     path('prevention/', include(url_prevention)),
     path('vaccination/', include(url_vaccination)),
+    path('species_subspecies/', include(url_species_subspecies)),
+    path('search/', views.SearchView.as_view(), name='search'),
 ]

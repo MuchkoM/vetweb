@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block sript %}
+    <script>
+        $('#id_q').val({{ q }});
+    </script>
+{% endblock %}
+{% block panel_title %}{% block title %}{% blocktrans %}Результаты поисков{% endblocktrans %}
+{% endblock %}{% endblock %}
+{% block body %}
+    {% include 'vet/owner/list_template_preview.html' with object_list=owners_fio %}
+    {% include 'vet/owner/list_template_preview.html' with object_list=owners_address %}
+{% endblock %}
+

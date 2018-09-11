@@ -16,6 +16,18 @@ class AuthRequireView(LoginRequiredMixin):
     pass
 
 
+class SearchView(AuthRequireView, generic.TemplateView):
+    template_name = 'vet/search.html'
+
+    def get_context_data(self):
+        q = self.request.GET['q']
+        owners_fio = models.Owner.objects.filter(fio__contains=q)
+        owners_address = models.Owner.objects.filter(address__contains=q)
+        return {'q': q,
+                'owners_fio': owners_fio,
+                'owners_address': owners_address, }
+
+
 class ParamCreateView(generic.CreateView):
     def get_initial(self):
         initial = super().get_initial()
@@ -205,6 +217,43 @@ class VaccinationView:
     def delete(request, pk):
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
         vaccination.delete()
+        return HttpResponse('')
+
+
+class SpeciesSubspeciesView:
+    @staticmethod
+    @login_required
+    def create(request):
+        species_str = request.GET['species']
+        subspecies_str = request.GET['subspecies']
+
+        species, c = models.Species.objects.get_or_create(value=species_str)
+        subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
+
+        return HttpResponse('')
+
+    @staticmethod
+    @login_required
+    def update(request, pk):
+        species_str = request.GET['species']
+        subspecies_str = request.GET['subspecies']
+
+        species, c = models.Species.objects.get_or_create(value=species_str)
+        subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
+
+        value = request.GET['value']
+        vaccination = get_object_or_404(models.Vaccination, pk=pk)
+        vaccination.value = value
+        vaccination.save()
+        return HttpResponse('')
+
+    class List(AuthRequireView, generic.ListView):
+        template_name = 'vet/species_subspecies/list.html'
+        model = models.Subspecies
+
+    @staticmethod
+    @login_required
+    def delete(request, pk):
         return HttpResponse('')
 
 
