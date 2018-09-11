@@ -237,16 +237,6 @@ class SpeciesSubspeciesView:
     @staticmethod
     @login_required
     def update(request, pk):
-        species_str = request.GET['species']
-        subspecies_str = request.GET['subspecies']
-
-        species, c = models.Species.objects.get_or_create(value=species_str)
-        subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
-
-        value = request.GET['value']
-        vaccination = get_object_or_404(models.Vaccination, pk=pk)
-        vaccination.value = value
-        vaccination.save()
         return HttpResponse('')
 
     class List(AuthRequireView, generic.ListView):
