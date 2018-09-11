@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'g9k)6((ww4^tw&k)!n459*_p@j%(4u3z=ik^)d$nf%aepm%lc@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 LOGIN_URL = reverse_lazy('login')
 LOGOUT_REDIRECT_URL = '/'
