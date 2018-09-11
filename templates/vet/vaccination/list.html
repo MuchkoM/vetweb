@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block panel_title %}{% block title %}{% blocktrans %}Список всех прививок{% endblocktrans %}{% endblock %}{% endblock %}
+{% block body %}
+    {% include 'vet/vaccination/list_template_preview.html' %}
+{% endblock %}
+

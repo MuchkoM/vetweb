@@ -43,10 +43,16 @@ url_ajax = [
     path('vaccination/', views.Ajax.Vaccination.get_ajax, name='ajax-vaccination'),
 ]
 url_diagnosis = [
-    path('', views.DiagnosisView.List.as_view(), name='diagnosis-list'),
     path('add/', views.DiagnosisView.create, name='diagnosis-create'),
+    path('', views.DiagnosisView.List.as_view(), name='diagnosis-list'),
     path('update/<int:pk>', views.DiagnosisView.update, name='diagnosis-update'),
     path('delete/<int:pk>', views.DiagnosisView.delete, name='diagnosis-delete'),
+]
+url_vaccination = [
+    path('add/', views.VaccinationView.create, name='vaccination-create'),
+    path('', views.VaccinationView.List.as_view(), name='vaccination-list'),
+    path('update/<int:pk>', views.VaccinationView.update, name='vaccination-update'),
+    path('delete/<int:pk>', views.VaccinationView.delete, name='vaccination-delete'),
 ]
 urlpatterns = [
     path('ajax/', include(url_ajax)),
@@ -55,4 +61,5 @@ urlpatterns = [
     path('therapy/', include(url_therapy)),
     path('diagnosis/', include(url_diagnosis)),
     path('prevention/', include(url_prevention)),
+    path('vaccination/', include(url_vaccination)),
 ]

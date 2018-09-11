@@ -72,6 +72,7 @@ $(function () {
     });
     let pathname = window.location.pathname;
     $('#topNavBar .nav-link[href="' + pathname + '"]').parent().addClass('active');
+
     $(".add").click(function () {
         let value = $('#add').text();
         let url = urls['diagnosis-create'];

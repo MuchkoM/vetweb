@@ -175,6 +175,32 @@ class DiagnosisView:
         return redirect(reverse_lazy('vet:diagnosis-list'))
 
 
+class VaccinationView:
+    @staticmethod
+    def create(request):
+        value = request.GET['value']
+        models.Vaccination.objects.get_or_create(value=value)
+        return HttpResponse('')
+
+    @staticmethod
+    def update(request, pk):
+        value = request.GET['value']
+        vaccination = get_object_or_404(models.Vaccination, pk=pk)
+        vaccination.value = value
+        vaccination.save()
+        return HttpResponse('')
+
+    class List(AuthRequireView, generic.ListView):
+        model = models.Vaccination
+        template_name = 'vet/vaccination/list.html'
+
+    @staticmethod
+    def delete(request, pk):
+        vaccination = get_object_or_404(models.Vaccination, pk=pk)
+        vaccination.delete()
+        return redirect(reverse_lazy('vet:vaccination-list'))
+
+
 class Ajax:
     class Owner(AjaxRequest):
         @staticmethod
