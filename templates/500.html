@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block panel_title %}{% block title %}Ошибка сервера{% endblock %}{% endblock %}
 {% block body %}
-    Ошибка сервера
+    {% blocktrans %}Ошибка сервера{% endblocktrans %}
 {% endblock %}

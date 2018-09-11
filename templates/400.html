@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block panel_title %}{% block title %}Неправильный запрос{% endblock %}{% endblock %}
-{% block body %}
-    Неправильный запрос
+{% load i18n %}
+{% block panel_title %}{% block title %}{% blocktrans %}Неправильный запрос{% endblocktrans %}{% endblock %}{% endblock %}
+{% block body %}{% blocktrans %}
+    Неправильный запрос{% endblocktrans %}
 {% endblock %}

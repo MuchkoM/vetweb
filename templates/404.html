@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block panel_title %}{% block title %}Ресурс не найден{% endblock %}{% endblock %}
-{% block body %}
-    Ресурс не найден
+{% block body %}{% blocktrans %}
+    Ресурс не найден{% endblocktrans %}
 {% endblock %}

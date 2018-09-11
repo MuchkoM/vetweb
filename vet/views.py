@@ -1,9 +1,10 @@
 import json
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -151,12 +152,14 @@ class TherapyView:
 
 class DiagnosisView:
     @staticmethod
+    @login_required
     def create(request):
         value = request.GET['value']
         models.Diagnosis.objects.get_or_create(value=value)
         return HttpResponse('')
 
     @staticmethod
+    @login_required
     def update(request, pk):
         value = request.GET['value']
         diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
@@ -169,6 +172,7 @@ class DiagnosisView:
         template_name = 'vet/diagnosis/list.html'
 
     @staticmethod
+    @login_required
     def delete(request, pk):
         diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
         diagnosis.delete()
@@ -177,12 +181,14 @@ class DiagnosisView:
 
 class VaccinationView:
     @staticmethod
+    @login_required
     def create(request):
         value = request.GET['value']
         models.Vaccination.objects.get_or_create(value=value)
         return HttpResponse('')
 
     @staticmethod
+    @login_required
     def update(request, pk):
         value = request.GET['value']
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
@@ -195,6 +201,7 @@ class VaccinationView:
         template_name = 'vet/vaccination/list.html'
 
     @staticmethod
+    @login_required
     def delete(request, pk):
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
         vaccination.delete()

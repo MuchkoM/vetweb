@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block panel_title %}{% block title %}Действие запрещенно{% endblock %}{% endblock %}
-{% block body %}
-    Действие запрещенно
+{% load i18n %}
+{% block panel_title %}{% block title %}{% blocktrans %}Действие запрещенно{% endblocktrans %}{% endblock %}{% endblock %}
+{% block body %}{% blocktrans %}
+    Действие запрещенно{% endblocktrans %}
 {% endblock %}
