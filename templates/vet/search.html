@@ -2,13 +2,17 @@
 {% load i18n %}
 {% block sript %}
     <script>
-        $('#id_q').val({{ q }});
+        $(document).ready(function () {
+            $('#id_q').attr('value', '{{ q }}');
+        });
     </script>
 {% endblock %}
 {% block panel_title %}{% block title %}{% blocktrans %}Результаты поисков{% endblocktrans %}
 {% endblock %}{% endblock %}
 {% block body %}
+    <h1>Поиск по именам</h1>
     {% include 'vet/owner/list_template_preview.html' with object_list=owners_fio %}
+    <h1>Поиск по адресам</h1>
     {% include 'vet/owner/list_template_preview.html' with object_list=owners_address %}
 {% endblock %}
 

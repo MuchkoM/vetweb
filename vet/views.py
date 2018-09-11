@@ -23,9 +23,11 @@ class SearchView(AuthRequireView, generic.TemplateView):
         q = self.request.GET['q']
         owners_fio = models.Owner.objects.filter(fio__contains=q)
         owners_address = models.Owner.objects.filter(address__contains=q)
-        return {'q': q,
-                'owners_fio': owners_fio,
-                'owners_address': owners_address, }
+        context = dict()
+        context['q'] = q
+        context['owners_fio'] = owners_fio
+        context['owners_address'] = owners_address
+        return context
 
 
 class ParamCreateView(generic.CreateView):
