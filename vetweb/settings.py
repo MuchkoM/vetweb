@@ -27,7 +27,7 @@ SECRET_KEY = 'g9k)6((ww4^tw&k)!n459*_p@j%(4u3z=ik^)d$nf%aepm%lc@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-LOGIN_URL = reverse_lazy('login')
+LOGIN_URL = reverse_lazy('registration:login')
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 

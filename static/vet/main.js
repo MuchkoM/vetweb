@@ -33,14 +33,15 @@ $(function () {
         changeMonth: true,
         changeYear: true,
     });
-    $("age").text(function (i, origText) {
+    $("span.age").text(function (i, origText) {
         let birth = moment(origText, "DD MMM YYYY");
         let now = moment();
         let year = now.diff(birth, 'year');
         let month = now.diff(birth, 'month') % 12;
         return ((year) ? getRusStringYear(year) : '') + ' ' + getRusStringMonth(month);
     });
-    $("info").text((i, origText) => origText ? origText : "<Не указанно>");
+    $("span.info").text((i, origText) => origText ? origText : "<Не указанно>");
+    // todo Autocomplete для search form
     $(".autocomplete[name]").autocomplete({
         source: function (request, response) {
             let name = this.element.attr('name');//WHY??? this is place do same thing like other
@@ -72,6 +73,7 @@ $(function () {
     });
     let pathname = window.location.pathname;
     $('#topNavBar .nav-link[href="' + pathname + '"]').parent().addClass('active');
+    // todo Сделать обработку spicies subspicies
     $("button.add").click(function () {
         let type = $(this).parents('table').attr('data-model-name');
         let $tr = $(this).parents('tr');

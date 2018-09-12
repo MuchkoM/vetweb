@@ -1,9 +1,6 @@
 <strong>Животное: </strong>{{ therapy.animal.name }}<br>
 <strong>Дата терапии: </strong> {{ therapy.date }}<br>
 <strong>Тип терапии: </strong> {{ therapy.get_type_display }}<br>
-<strong>Симптомы: </strong>
-<info>{{ therapy.symptomatic }}</info><br>
-<strong>Исследования: </strong>
-<info>{{ therapy.labs }}</info><br>
-<strong>Диагноз: </strong>
-<info>{{ therapy.get_diagnosis }}</info><br>
+<strong>Симптомы: </strong><span class="info">{{ therapy.symptomatic }}</span><br>
+<strong>Исследования: </strong><span class="info">{{ therapy.labs }}</span><br>
+<strong>Диагноз: </strong><span class="info">{{ therapy.get_diagnosis }}</span><br>

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block body %}
+    <h2>Регистрация на сайте</h2>
+    <p>Для работы на сайте дождитесь подтверждения администратора</p>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+                {% if field.help_text %}
+                    <small style="color: grey">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                {% endfor %}
+            </p>
+        {% endfor %}
+        <button type="submit" class="btn btn-success">{% trans "Регистрация" %}</button>
+        <button type="reset" class="btn btn-warning">{% trans "Сбросит форму" %}</button>
+        <a href="{% url 'home' %}" class="btn btn-danger" role="button">
+            {% blocktrans %}На главную страницу{% endblocktrans %}</a>
+    </form>
+{% endblock %}

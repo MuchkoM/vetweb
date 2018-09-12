@@ -3,11 +3,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <meta charset="UTF-8">
+    <title> {% block title %}WetVeb{% endblock %}</title>
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css"/>
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Satisfy'>
-    <link rel="stylesheet" href="{% static 'vet/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'vet/compiled_style.css' %}"/>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -37,12 +39,10 @@
         };
     </script>
     <script src="{% static 'vet/main.js' %}"></script>
-    <meta charset="UTF-8">
-    <title> {% block title %}WetVeb{% endblock %}</title>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="countainer-fluid">
+    <div class="countainer">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle='collapse' data-target="#topNavBar">
                 <span class="icon-bar"></span>
@@ -50,8 +50,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{% url 'home' %}">
-                <span><img src="{% static 'favicon.ico' %}" height="100%"/></span>
-                VetWeb
+                <span><img src="{% static 'favicon.ico' %}" height="100%"/> VetWeb</span>
             </a>
         </div>
         <div class="collapse navbar-collapse" id="topNavBar">
@@ -60,7 +59,7 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-haspopup="true" aria-expanded="true">
-                            Списки <span class="caret"></span>
+                            {% trans "Списки" %}<span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="nav-item">
@@ -92,7 +91,7 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-haspopup="true" aria-expanded="true">
-                            Добавить <span class="caret"></span></a>
+                            {% trans "Добавить" %}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'vet:owner-create' %}">
@@ -111,7 +110,7 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                            role="button" aria-haspopup="true" aria-expanded="true">
-                            {% trans "Ускорители" %} <span class="caret"></span></a>
+                            {% trans "Ускорители" %}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'vet:species_subspecies-list' %}">
@@ -133,33 +132,42 @@
                             </li>
                         </ul>
                     </li>
-                    <form action="{% url 'vet:search' %}"
-                          class=" nav-item navbar-form navbar-left search form-input" role="search">
-                        <div class="form-group">
-                            <input type="search" class="form-control" name="q" placeholder={% trans "Поиск" %} id="id_q"
-                                   value="">
-                        </div>
-                        <button type="submit" class="btn btn-default">{% trans "Поиск" %}</button>
-                    </form>
                 </ul>
+                <form class="navbar-form navbar-left" action="{% url 'vet:search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="q" id="id_q" placeholder="{% trans "Поиск" %}">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             {% endif %}
             <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'registration:signup' %}">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        Sign up
+                    </a>
+                </li>
                 {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <p class="navbar-text">
+                        <span class="navbar-text">
+                            <span class="glyphicon glyphicon-user"></span>
                             {{ user.username }}
-                        </p>
+                        </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">
+                        <a class="nav-link" href="{% url 'registration:logout' %}">
                             <span class="glyphicon glyphicon-log-out"></span>
-                            Logout
+                            {% trans "Выход" %}
                         </a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">
-                            Login
+                        <a class="nav-link" href="{% url 'registration:login' %}">
+                            {% trans "Вход" %}
                             <span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>&nbsp;
                         </a>
                     </li>
@@ -168,19 +176,17 @@
                     <p class="navbar-text"></p>
                 </li>
             </ul>
-
         </div>
     </div>
 </nav>
-<main class="container-fluid">
+<main class="container">
     <div class="row">
         <div class="panel panel-primary">
             <div class="panel-heading panel-warning">
                 {% block back_button %}
                     <a href="{{ request.META.HTTP_REFERER|escape }}"
-                       class="btn btn-success"
-                       role="button">
-                        {% trans "Назад" %}
+                       class="btn btn-success" role="button">
+                        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>&nbsp;
                     </a>
                 {% endblock %}
                 {% block panel_title %}WetVeb{% endblock %}</div>

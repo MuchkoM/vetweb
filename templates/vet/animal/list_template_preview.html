@@ -14,7 +14,7 @@
             <tr onclick="window.location='{% url "vet:animal-detail" animal.pk %}';">
                 <td>{{ animal.name }}</td>
                 <td>
-                    <age>{{ animal.date }}</age>
+                    <span class="age">{{ animal.date }}</span>
                 </td>
                 <td>{{ animal.get_gender_display }}</td>
                 <td>{{ animal.species.value }}</td>

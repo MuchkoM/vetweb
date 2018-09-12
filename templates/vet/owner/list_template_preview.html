@@ -14,13 +14,13 @@
             <tr onclick="window.location='{% url "vet:owner-detail" owner.pk %}';">
                 <td>{{ owner.fio }}</td>
                 <td>
-                    <info>{{ owner.address }}</info>
+                    <span class="info">{{ owner.address }}</span>
                 </td>
                 <td>
-                    <info>{{ owner.phone }}</info>
+                    <span class="info">{{ owner.phone }}</span>
                 </td>
                 <td>
-                    <info>{{ owner.email }}</info>
+                    <span class="info">{{ owner.email }}</span>
                 </td>
             </tr>
         {% endfor %}
