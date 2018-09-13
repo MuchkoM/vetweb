@@ -110,7 +110,7 @@ $(function () {
                     "value": $tr.children().eq(0).text()
                 };
         }
-        $.get(url, content, function () {
+        $.get(url, content, function (res) {
             location.reload();
         });
     });
@@ -120,10 +120,8 @@ $(function () {
         let pk = $tr.attr('id');
         let url = url_accelerate[type]['delete'] + pk;
         $.get(url, function (res) {
-            let result = JSON.parse(res);
-            console.log(result['error'])
             if (res !== "{}") {
-                $('#error_msg').text(res);
+                $('#error_msg').text("Ошибка удаления");
             } else {
                 location.reload();
             }
