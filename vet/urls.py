@@ -54,11 +54,11 @@ url_vaccination = [
     path('update/<int:pk>', views.VaccinationView.update, name='vaccination-update'),
     path('delete/<int:pk>', views.VaccinationView.delete, name='vaccination-delete'),
 ]
-url_species_subspecies = [
-    path('add/', views.SpeciesSubspeciesView.create, name='species_subspecies-create'),
-    path('', views.SpeciesSubspeciesView.List.as_view(), name='species_subspecies-list'),
-    path('update/<int:pk>', views.SpeciesSubspeciesView.update, name='species_subspecies-update'),
-    path('delete/<int:pk>', views.SpeciesSubspeciesView.delete, name='species_subspecies-delete'),
+url_subspecies = [
+    path('add/', views.SubspeciesView.create, name='subspecies-create'),
+    path('', views.SubspeciesView.List.as_view(), name='subspecies-list'),
+    path('update/<int:pk>', views.SubspeciesView.update, name='subspecies-update'),
+    path('delete/<int:pk>', views.SubspeciesView.delete, name='subspecies-delete'),
 ]
 urlpatterns = [
     path('ajax/', include(url_ajax)),
@@ -67,7 +67,7 @@ urlpatterns = [
     path('therapy/', include(url_therapy)),
     path('diagnosis/', include(url_diagnosis)),
     path('prevention/', include(url_prevention)),
+    path('subspecies/', include(url_subspecies)),
     path('vaccination/', include(url_vaccination)),
-    path('species_subspecies/', include(url_species_subspecies)),
     path('search/', views.SearchView.as_view(), name='search'),
 ]

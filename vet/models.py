@@ -5,6 +5,13 @@ from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 
+class OwnerManager(models.Manager):
+    def owners_by_term(self, term: str):
+        q1 = self.filter(fio__contains=term)
+        q2 = self.filter(address__contains=term)
+        return (q1 | q2).distinct()
+
+
 class Owner(models.Model):
     class Meta:
         unique_together = ('fio', 'address',)
@@ -16,21 +23,17 @@ class Owner(models.Model):
     email = models.EmailField(verbose_name=_('Email'), max_length=50, blank=True)
     date = models.DateTimeField(auto_now=True)
 
+    objects = OwnerManager()
+
     def get_absolute_url(self):
         return reverse('vet:owner-detail', kwargs={'pk': self.pk})
-
-    @staticmethod
-    def get_fio_address_by_term(term):
-        q1 = Owner.objects.filter(fio__contains=term)
-        q2 = Owner.objects.filter(address__contains=term)
-        return (q1 | q2).distinct()
 
     def __str__(self):
         return f'{self.fio} {self.address}'
 
 
 class ValuesModel(models.Model):
-    value = models.CharField(max_length=40)
+    value = models.CharField(max_length=40, unique=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -49,7 +52,15 @@ class Subspecies(ValuesModel):
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.species} {self.value}'
+        return f'{self.species.value} {self.value}'
+
+
+class AnimalManager(models.Manager):
+    def live_animals(self):
+        return self.filter(is_die__exact=False)
+
+    def die_animals(self):
+        return self.filter(is_die__exact=True)
 
 
 class Animal(models.Model):
@@ -84,6 +95,7 @@ class Animal(models.Model):
         (YES, _('Да')),
         (NO, _('Нет')),
     )
+    objects = AnimalManager()
 
     owner = models.ForeignKey(Owner, verbose_name=_('Владелец'),
                               on_delete=models.CASCADE)
@@ -99,7 +111,6 @@ class Animal(models.Model):
     gender = models.BooleanField(verbose_name=_('Пол'),
                                  choices=GENDER_CHOICE,
                                  default=GENDER_MALE)
-
     aggressive = models.CharField(verbose_name=_('Агрессивность'),
                                   choices=AGGRESSIVE_CHOICE,
                                   default=AGGRESSIVE_LOW,

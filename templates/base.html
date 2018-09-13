@@ -36,6 +36,11 @@
                 'update': '{% url 'vet:vaccination-update' 0 %}',
                 'delete': '{% url 'vet:vaccination-delete' 0 %}',
             },
+            'subspecies': {
+                'create': "{% url 'vet:subspecies-create' %}",
+                'update': '{% url 'vet:subspecies-update' 0 %}',
+                'delete': '{% url 'vet:subspecies-delete' 0 %}',
+            }
         };
     </script>
     <script src="{% static 'vet/main.js' %}"></script>
@@ -113,7 +118,7 @@
                             {% trans "Ускорители" %}<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li class="nav-item">
-                                <a class="nav-link" href="{% url 'vet:species_subspecies-list' %}">
+                                <a class="nav-link" href="{% url 'vet:subspecies-list' %}">
                                     <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>&nbsp;
                                     {% trans "Вид, порода" %}
                                 </a>

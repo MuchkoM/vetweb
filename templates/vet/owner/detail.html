@@ -15,6 +15,9 @@
             <a href="{% url 'vet:owner-delete' object.pk %}" class="btn btn-danger" role="button">
                 {% blocktrans %}Удалить владельца из базы{% endblocktrans %}
             </a>
+            <a href="{% url 'vet:animal-create-owner' object.pk %}" class="btn btn-success" role="button">
+                {% blocktrans %}Добавить питомца владельцу{% endblocktrans %}
+            </a>
         </div>
         <div class="panel-body">
             {% include 'vet/owner/detail_templete_full.html' %}
@@ -22,11 +25,14 @@
     </div>
     <div class="panel panel-info">
         <div class="panel-heading">
-            <a href="{% url 'vet:animal-create-owner' object.pk %}" class="btn btn-success" role="button">
-                {% blocktrans %}Добавить питомец владельцу{% endblocktrans %}
-            </a>
-            {% blocktrans %}Список питомцев владельца{% endblocktrans %}
+            {% blocktrans %}Питомцы{% endblocktrans %}
         </div>
-        {% include 'vet/animal/list_template_preview.html' with object_list=object.animal_set.all %}
+        {% include 'vet/animal/list_template_preview.html' with object_list=object.animal_set.live_animals.all %}
+    </div>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            {% blocktrans %}Погибшие животные{% endblocktrans %}
+        </div>
+        {% include 'vet/animal/list_template_preview.html' with object_list=object.animal_set.die_animals.all %}
     </div>
 {% endblock %}

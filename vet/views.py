@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
+from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -12,11 +13,7 @@ from . import forms
 from . import models
 
 
-class AuthRequireView(LoginRequiredMixin):
-    pass
-
-
-class SearchView(AuthRequireView, generic.TemplateView):
+class SearchView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'vet/search.html'
 
     def get_context_data(self):
@@ -64,47 +61,50 @@ class AjaxRequest:
 
 
 class OwnerView:
-    class Create(AuthRequireView, generic.CreateView):
+    class Create(LoginRequiredMixin, generic.CreateView):
         form_class = forms.OwnerForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(AuthRequireView, generic.DetailView):
+    class Detail(LoginRequiredMixin, generic.DetailView):
         model = models.Owner
         template_name = 'vet/owner/detail.html'
 
-    class List(AuthRequireView, generic.ListView):
+    class List(LoginRequiredMixin, generic.ListView):
         model = models.Owner
         template_name = 'vet/owner/list.html'
 
-    class Update(AuthRequireView, generic.UpdateView):
+    class Update(LoginRequiredMixin, generic.UpdateView):
         form_class = forms.OwnerForm
         model = models.Owner
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(AuthRequireView, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
         model = models.Owner
         success_url = reverse_lazy('vet:owner-list')
 
 
 class AnimalView:
-    class Create(AuthRequireView, ParamCreateView):
+    class Create(LoginRequiredMixin, ParamCreateView):
         form_class = forms.AnimalForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(AuthRequireView, generic.DetailView):
+    class Detail(LoginRequiredMixin, generic.DetailView):
         model = models.Animal
         template_name = 'vet/animal/detail.html'
 
-    class List(AuthRequireView, generic.ListView):
+    class List(LoginRequiredMixin, generic.ListView):
         model = models.Animal
         template_name = 'vet/animal/list.html'
 
-    class Update(AuthRequireView, generic.UpdateView):
+        def get_queryset(self):
+            return self.model.objects.live_animals()
+
+    class Update(LoginRequiredMixin, generic.UpdateView):
         form_class = forms.AnimalForm
         model = models.Animal
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(AuthRequireView, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
         model = models.Animal
 
         def get_success_url(self):
@@ -113,24 +113,24 @@ class AnimalView:
 
 
 class PreventionView:
-    class Create(AuthRequireView, ParamCreateView):
+    class Create(LoginRequiredMixin, ParamCreateView):
         form_class = forms.PreventionForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(AuthRequireView, generic.DetailView):
+    class Detail(LoginRequiredMixin, generic.DetailView):
         model = models.Prevention
         template_name = 'vet/prevention/detail.html'
 
-    class List(AuthRequireView, generic.ListView):
+    class List(LoginRequiredMixin, generic.ListView):
         model = models.Prevention
         template_name = 'vet/prevention/list.html'
 
-    class Update(AuthRequireView, generic.UpdateView):
+    class Update(LoginRequiredMixin, generic.UpdateView):
         form_class = forms.PreventionForm
         model = models.Prevention
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(AuthRequireView, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
         model = models.Prevention
 
         def get_success_url(self):
@@ -139,24 +139,24 @@ class PreventionView:
 
 
 class TherapyView:
-    class Create(AuthRequireView, ParamCreateView):
+    class Create(LoginRequiredMixin, ParamCreateView):
         form_class = forms.TherapyForm
         template_name = 'vet/generic/generic_form.html'
 
-    class Detail(AuthRequireView, generic.DetailView):
+    class Detail(LoginRequiredMixin, generic.DetailView):
         model = models.Therapy
         template_name = 'vet/therapy/detail.html'
 
-    class List(AuthRequireView, generic.ListView):
+    class List(LoginRequiredMixin, generic.ListView):
         model = models.Therapy
         template_name = 'vet/therapy/list.html'
 
-    class Update(AuthRequireView, generic.UpdateView):
+    class Update(LoginRequiredMixin, generic.UpdateView):
         form_class = forms.TherapyForm
         model = models.Therapy
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(AuthRequireView, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
         model = models.Therapy
 
         def get_success_url(self):
@@ -181,7 +181,7 @@ class DiagnosisView:
         diagnosis.save()
         return HttpResponse('')
 
-    class List(AuthRequireView, generic.ListView):
+    class List(LoginRequiredMixin, generic.ListView):
         model = models.Diagnosis
         template_name = 'vet/diagnosis/list.html'
 
@@ -210,7 +210,7 @@ class VaccinationView:
         vaccination.save()
         return HttpResponse('')
 
-    class List(AuthRequireView, generic.ListView):
+    class List(LoginRequiredMixin, generic.ListView):
         model = models.Vaccination
         template_name = 'vet/vaccination/list.html'
 
@@ -222,7 +222,7 @@ class VaccinationView:
         return HttpResponse('')
 
 
-class SpeciesSubspeciesView:
+class SubspeciesView:
     @staticmethod
     @login_required
     def create(request):
@@ -237,16 +237,23 @@ class SpeciesSubspeciesView:
     @staticmethod
     @login_required
     def update(request, pk):
+        # todo Нереализованно обновление непонятна механика
         return HttpResponse('')
 
-    class List(AuthRequireView, generic.ListView):
-        template_name = 'vet/species_subspecies/list.html'
+    class List(LoginRequiredMixin, generic.ListView):
+        template_name = 'vet/subspecies/list.html'
         model = models.Subspecies
 
     @staticmethod
     @login_required
     def delete(request, pk):
-        return HttpResponse('')
+        subspecies = get_object_or_404(models.Subspecies, pk=pk)
+        content = dict()
+        try:
+            subspecies.delete()
+        except IntegrityError:
+            content['error'] = pk
+        return HttpResponse(content=json.dumps(content))
 
 
 class Ajax:
@@ -254,7 +261,7 @@ class Ajax:
         @staticmethod
         def get_queryset_value(kwarg):
             term = kwarg['term'].strip()
-            owners = models.Owner.get_fio_address_by_term(term)[:10]
+            owners = models.Owner.objects.owners_by_term(term)[:10]
             list_out = [{'label': f'{owner.fio} {owner.address}', 'value': owner.pk} for owner in owners]
             return list_out
 

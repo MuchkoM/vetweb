@@ -41,7 +41,6 @@ $(function () {
         return ((year) ? getRusStringYear(year) : '') + ' ' + getRusStringMonth(month);
     });
     $("span.info").text((i, origText) => origText ? origText : "<Не указанно>");
-    // todo Autocomplete для search form
     $(".autocomplete[name]").autocomplete({
         source: function (request, response) {
             let name = this.element.attr('name');//WHY??? this is place do same thing like other
@@ -71,37 +70,63 @@ $(function () {
         $(this).select();
         $(this).autocomplete("search", $(this).val());
     });
-    let pathname = window.location.pathname;
-    $('#topNavBar .nav-link[href="' + pathname + '"]').parent().addClass('active');
-    // todo Сделать обработку spicies subspicies
-    $("button.add").click(function () {
+    $('#topNavBar .nav-link[href="' + window.location.pathname + '"]').parent().addClass('active');
+    $('table[data-model-name] button.add').click(function () {
         let type = $(this).parents('table').attr('data-model-name');
         let $tr = $(this).parents('tr');
-        let value = $tr.children(":first").text();
         let url = url_accelerate[type]['create'];
-        if (value !== '') {
-            $.get(url, {'value': value}, function () {
-                location.reload();
-            });
+        let content;
+        switch (type) {
+            case 'subspecies':
+                content = {
+                    "species": $tr.children().eq(0).text(),
+                    'subspecies': $tr.children().eq(1).text()
+                };
+                break;
+            default:
+                content = {
+                    "value": $tr.children().eq(0).text()
+                };
         }
-    });
-    $("button.update").click(function () {
-        let type = $(this).parents('table').attr('data-model-name');
-        let $tr = $(this).parents('tr');
-        let pk = $tr.attr('id');
-        let value = $tr.children(":first").text();
-        let url = url_accelerate[type]['update'].slice(0, -1) + pk;
-        $.get(url, {'value': value}, function () {
+        $.get(url, content, function () {
             location.reload();
         });
     });
-    $("button.delete").click(function () {
+    $('table[data-model-name] button.update').click(function () {
         let type = $(this).parents('table').attr('data-model-name');
         let $tr = $(this).parents('tr');
         let pk = $tr.attr('id');
-        let url = url_accelerate[type]['delete'].slice(0, -1) + pk;
-        $.get(url, function () {
+        let url = url_accelerate[type]['update'] + pk;
+        let content;
+        switch (type) {
+            case 'subspecies':
+                content = {
+                    "species": $tr.children().eq(0).text(),
+                    'subspecies': $tr.children().eq(1).text()
+                };
+                break;
+            default:
+                content = {
+                    "value": $tr.children().eq(0).text()
+                };
+        }
+        $.get(url, content, function () {
             location.reload();
+        });
+    });
+    $('table[data-model-name] button.delete').click(function () {
+        let type = $(this).parents('table').attr('data-model-name');
+        let $tr = $(this).parents('tr');
+        let pk = $tr.attr('id');
+        let url = url_accelerate[type]['delete'] + pk;
+        $.get(url, function (res) {
+            let result = JSON.parse(res);
+            console.log(result['error'])
+            if (res !== "{}") {
+                $('#error_msg').text(res);
+            } else {
+                location.reload();
+            }
         });
     });
 });
