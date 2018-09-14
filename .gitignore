@@ -114,3 +114,4 @@ vet/migrations/__pycache__/
 vetweb/__pycache__/
 *_initial.py
 *_auto_*_*.py
+*.css.map

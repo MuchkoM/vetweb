@@ -120,6 +120,7 @@ $(function () {
                 $('#status_msg').css("color", "red").text("Ошибка при обновлении");
             } else {
                 $('#status_msg').css("color", "green").text("Обновление успешно");
+                location.reload();
             }
         });
     });

@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import QuerySet
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -14,14 +13,11 @@ from . import models
 class SearchView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'vet/search.html'
 
-    def get_context_data(self):
-        q = self.request.GET['q']
-        owners_fio = models.Owner.objects.filter(fio__contains=q)
-        owners_address = models.Owner.objects.filter(address__contains=q)
-        context = dict()
-        context['q'] = q
-        context['owners_fio'] = owners_fio
-        context['owners_address'] = owners_address
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['q'] = q = self.request.GET['q']
+        context['owners_fio'] = models.Owner.objects.filter(fio__contains=q)
+        context['owners_address'] = models.Owner.objects.filter(address__contains=q)
         return context
 
 
@@ -45,13 +41,13 @@ class AjaxRequest:
         result = []
         if request.user.is_authenticated:
             if request.is_ajax():
-                kwargs = request.GET.dict()
-                result = list(cls.get_queryset_value(kwargs))
+                kwargs = request.GET
+                result = cls.get_queryset_value(kwargs)
 
-        return JsonResponse(result, safe=False)
+        return JsonResponse(list(result), safe=False)
 
     @staticmethod
-    def get_queryset_value(kwarg: dict) -> QuerySet:
+    def get_queryset_value(kwarg):
         pass
 
 
@@ -232,10 +228,18 @@ class SubspeciesView:
     @staticmethod
     @login_required
     def update(request, pk):
-        # todo Нереализованно обновление непонятна механика
-        content = dict()
-        content['error'] = pk
-        return JsonResponse(content)
+        species_str = request.GET['species']
+        subspecies_str = request.GET['subspecies']
+
+        subspecies = get_object_or_404(models.Subspecies, pk=pk)
+
+        subspecies.value = subspecies_str
+        subspecies.save()
+
+        subspecies.species.value = species_str
+        subspecies.species.save()
+
+        return JsonResponse({})
 
     class List(LoginRequiredMixin, generic.ListView):
         template_name = 'vet/subspecies/list.html'
