@@ -1,10 +1,8 @@
-import json
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.db.utils import IntegrityError
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -44,16 +42,13 @@ class NoConfirmDeleteView(generic.DeleteView):
 class AjaxRequest:
     @classmethod
     def get_ajax(cls, request):
+        result = []
         if request.user.is_authenticated:
             if request.is_ajax():
                 kwargs = request.GET.dict()
                 result = list(cls.get_queryset_value(kwargs))
-                data = json.dumps(result)
-            else:
-                data = 'fail'
-        else:
-            data = 'fail'
-        return HttpResponse(data, 'application/json')
+
+        return JsonResponse(result, safe=False)
 
     @staticmethod
     def get_queryset_value(kwarg: dict) -> QuerySet:
@@ -170,7 +165,7 @@ class DiagnosisView:
     def create(request):
         value = request.GET['value']
         models.Diagnosis.objects.get_or_create(value=value)
-        return HttpResponse('')
+        return JsonResponse({})
 
     @staticmethod
     @login_required
@@ -179,7 +174,7 @@ class DiagnosisView:
         diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
         diagnosis.value = value
         diagnosis.save()
-        return HttpResponse('')
+        return JsonResponse({})
 
     class List(LoginRequiredMixin, generic.ListView):
         model = models.Diagnosis
@@ -190,7 +185,7 @@ class DiagnosisView:
     def delete(request, pk):
         diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
         diagnosis.delete()
-        return HttpResponse('')
+        return JsonResponse({})
 
 
 class VaccinationView:
@@ -199,7 +194,7 @@ class VaccinationView:
     def create(request):
         value = request.GET['value']
         models.Vaccination.objects.get_or_create(value=value)
-        return HttpResponse('')
+        return JsonResponse({})
 
     @staticmethod
     @login_required
@@ -208,7 +203,7 @@ class VaccinationView:
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
         vaccination.value = value
         vaccination.save()
-        return HttpResponse('')
+        return JsonResponse({})
 
     class List(LoginRequiredMixin, generic.ListView):
         model = models.Vaccination
@@ -219,7 +214,7 @@ class VaccinationView:
     def delete(request, pk):
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
         vaccination.delete()
-        return HttpResponse('')
+        return JsonResponse({})
 
 
 class SubspeciesView:
@@ -232,13 +227,15 @@ class SubspeciesView:
         species, c = models.Species.objects.get_or_create(value=species_str)
         subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
 
-        return HttpResponse('')
+        return JsonResponse({})
 
     @staticmethod
     @login_required
     def update(request, pk):
         # todo Нереализованно обновление непонятна механика
-        return HttpResponse('')
+        content = dict()
+        content['error'] = pk
+        return JsonResponse(content)
 
     class List(LoginRequiredMixin, generic.ListView):
         template_name = 'vet/subspecies/list.html'
@@ -248,12 +245,18 @@ class SubspeciesView:
     @login_required
     def delete(request, pk):
         subspecies = get_object_or_404(models.Subspecies, pk=pk)
+        species = subspecies.species
+
         content = dict()
         try:
             subspecies.delete()
         except IntegrityError:
             content['error'] = pk
-        return HttpResponse(content=json.dumps(content))
+
+        if not species.subspecies_set.exists():
+            species.delete()
+
+        return JsonResponse(content)
 
 
 class Ajax:

@@ -88,8 +88,13 @@ $(function () {
                     "value": $tr.children().eq(0).text()
                 };
         }
-        $.get(url, content, function () {
-            location.reload();
+        $.get(url, content, function (result) {
+            if ('error' in result) {
+                $('#status_msg').css("color", "red").text("Ошибка при добавлении");
+            } else {
+                $('#status_msg').css("color", "green").text("Добавление успешно");
+                location.reload();
+            }
         });
     });
     $('table[data-model-name] button.update').click(function () {
@@ -110,8 +115,12 @@ $(function () {
                     "value": $tr.children().eq(0).text()
                 };
         }
-        $.get(url, content, function () {
-            location.reload();
+        $.get(url, content, function (result) {
+            if ('error' in result) {
+                $('#status_msg').css("color", "red").text("Ошибка при обновлении");
+            } else {
+                $('#status_msg').css("color", "green").text("Обновление успешно");
+            }
         });
     });
     $('table[data-model-name] button.delete').click(function () {
@@ -119,12 +128,11 @@ $(function () {
         let $tr = $(this).parents('tr');
         let pk = $tr.attr('id');
         let url = url_accelerate[type]['delete'] + pk;
-        $.get(url, function (res) {
-            let result = JSON.parse(res);
-            console.log(result['error'])
-            if (res !== "{}") {
-                $('#error_msg').text(res);
+        $.get(url, function (result) {
+            if ('error' in result) {
+                $('#status_msg').css("color", "red").text("Ошибка при удалении");
             } else {
+                $('#status_msg').css("color", "green").text("Удаление успешно");
                 location.reload();
             }
         });

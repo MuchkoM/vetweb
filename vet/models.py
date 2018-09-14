@@ -49,6 +49,7 @@ class Species(ValuesModel):
 
 
 class Subspecies(ValuesModel):
+    value = models.CharField(max_length=40)
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
 
     def __str__(self):
