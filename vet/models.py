@@ -15,7 +15,6 @@ class OwnerManager(models.Manager):
 class Owner(models.Model):
     class Meta:
         unique_together = ('fio', 'address',)
-        ordering = ("-date",)
 
     fio = models.CharField(verbose_name=_('ФИО'), max_length=50)
     address = models.CharField(verbose_name=_('Адрес'), max_length=70, blank=True)
@@ -34,14 +33,12 @@ class Owner(models.Model):
 
 class ValuesModel(models.Model):
     value = models.CharField(max_length=40, unique=True)
-    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.value}'
 
     class Meta:
         abstract = True
-        ordering = ("-date",)
 
 
 class Species(ValuesModel):
@@ -153,7 +150,6 @@ class AnimalProcedures(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ("-date",)
 
 
 class Vaccination(ValuesModel):
@@ -180,9 +176,6 @@ class Prevention(AnimalProcedures):
                                         choices=TYPE_CHOICE,
                                         default=TYPE_FIRST)
 
-    def get_vaccination(self):
-        return self.vaccination.value if self.vaccination is not None else ''
-
 
 class Therapy(AnimalProcedures):
     procedure_type = _('Терапия')
@@ -199,6 +192,3 @@ class Therapy(AnimalProcedures):
     labs = models.CharField(verbose_name=_('Исследования'), max_length=100, blank=True)
     diagnosis = models.ForeignKey(Diagnosis, verbose_name=_('Диагноз'),
                                   on_delete=models.DO_NOTHING)
-
-    def get_diagnosis(self):
-        return self.diagnosis.value if self.diagnosis is not None else ''

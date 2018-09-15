@@ -1,9 +1,6 @@
 html {
     position: relative;
     min-height: 100%;
-}
-
-html, body {
     height: 100%
 }
 
@@ -11,6 +8,7 @@ body {
     margin-top: 60px;
     margin-bottom: 60px;
     background: white url("images/background.png");
+    height: 100%
 }
 
 .navbar {
@@ -26,7 +24,7 @@ body {
     height: 25px;
 }
 
-.autocomplete:not([disabled]){
+.autocomplete:not([disabled]) {
     background-image: url("images/choice.jpg");
     background-position: 97% center;
     background-repeat: no-repeat;
