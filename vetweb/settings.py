@@ -32,6 +32,7 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
 
 ALLOWED_HOSTS = ['muchkom.pythonanywhere.com', '127.0.0.1']
+CSRF_USE_SESSIONS = True
 
 # Application definition
 
