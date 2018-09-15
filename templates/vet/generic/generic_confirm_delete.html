@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block panel_title %}{% block title %}Удалить {{ object }}{% endblock %}{% endblock %}
+{% block body %}
+    <form method="post">
+        {% csrf_token %}
+        <p>Поттвердите удаление {{ object }}?</p>
+        <input type="submit" class="btn btn-warning" role="button" value="Да">
+        <a href="{{ request.META.HTTP_REFERER|escape }}"
+           class="btn btn-success"
+           role="button">
+            Нет
+        </a>
+    </form>
+{% endblock %}

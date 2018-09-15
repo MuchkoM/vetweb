@@ -41,7 +41,7 @@ class ValuesModel(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ["-date"]
+        ordering = ("-date",)
 
 
 class Species(ValuesModel):
@@ -49,6 +49,9 @@ class Species(ValuesModel):
 
 
 class Subspecies(ValuesModel):
+    class Meta:
+        unique_together = ('value', 'species',)
+
     value = models.CharField(max_length=40)
     species = models.ForeignKey(Species, on_delete=models.CASCADE)
 
@@ -150,7 +153,7 @@ class AnimalProcedures(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ["date"]
+        ordering = ("-date",)
 
 
 class Vaccination(ValuesModel):
@@ -171,8 +174,8 @@ class Prevention(AnimalProcedures):
         (TYPE_AGAIN, _('Повторная')),
         (TYPE_REPEAT, _('Ревакцинация')),
     )
-    vaccination = models.ForeignKey(Vaccination, null=True, verbose_name=_('Прививка'),
-                                    on_delete=models.SET_NULL)
+    vaccination = models.ForeignKey(Vaccination, verbose_name=_('Прививка'),
+                                    on_delete=models.DO_NOTHING)
     type_vaccination = models.CharField(verbose_name=_('Тип прививки'), max_length=1,
                                         choices=TYPE_CHOICE,
                                         default=TYPE_FIRST)
@@ -194,8 +197,8 @@ class Therapy(AnimalProcedures):
                             default=THERAPY_CLINIC)
     symptomatic = models.CharField(verbose_name=_('Симптомы'), max_length=100, blank=True)
     labs = models.CharField(verbose_name=_('Исследования'), max_length=100, blank=True)
-    diagnosis = models.ForeignKey(Diagnosis, null=True, verbose_name=_('Диагноз'),
-                                  on_delete=models.SET_NULL)
+    diagnosis = models.ForeignKey(Diagnosis, verbose_name=_('Диагноз'),
+                                  on_delete=models.DO_NOTHING)
 
     def get_diagnosis(self):
         return self.diagnosis.value if self.diagnosis is not None else ''

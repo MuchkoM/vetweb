@@ -43,22 +43,22 @@ url_ajax = [
     path('vaccination/', views.Ajax.Vaccination.get_ajax, name='ajax-vaccination'),
 ]
 url_diagnosis = [
-    path('add/', views.DiagnosisView.create, name='diagnosis-create'),
-    path('', views.DiagnosisView.List.as_view(), name='diagnosis-list'),
-    path('update/<int:pk>', views.DiagnosisView.update, name='diagnosis-update'),
-    path('delete/<int:pk>', views.DiagnosisView.delete, name='diagnosis-delete'),
+    path('add/', views.diagnosis_create, name='diagnosis-create'),
+    path('', views.DiagnosisList.as_view(), name='diagnosis-list'),
+    path('update/<int:pk>', views.diagnosis_update, name='diagnosis-update'),
+    path('delete/<int:pk>', views.diagnosis_delete, name='diagnosis-delete'),
 ]
 url_vaccination = [
-    path('add/', views.VaccinationView.create, name='vaccination-create'),
-    path('', views.VaccinationView.List.as_view(), name='vaccination-list'),
-    path('update/<int:pk>', views.VaccinationView.update, name='vaccination-update'),
-    path('delete/<int:pk>', views.VaccinationView.delete, name='vaccination-delete'),
+    path('add/', views.vaccination_create, name='vaccination-create'),
+    path('', views.VaccinationList.as_view(), name='vaccination-list'),
+    path('update/<int:pk>', views.vaccination_update, name='vaccination-update'),
+    path('delete/<int:pk>', views.vaccination_delete, name='vaccination-delete'),
 ]
 url_subspecies = [
-    path('add/', views.SubspeciesView.create, name='subspecies-create'),
-    path('', views.SubspeciesView.List.as_view(), name='subspecies-list'),
-    path('update/<int:pk>', views.SubspeciesView.update, name='subspecies-update'),
-    path('delete/<int:pk>', views.SubspeciesView.delete, name='subspecies-delete'),
+    path('add/', views.subspecies_create, name='subspecies-create'),
+    path('', views.SubspeciesList.as_view(), name='subspecies-list'),
+    path('update/<int:pk>', views.subspecies_update, name='subspecies-update'),
+    path('delete/<int:pk>', views.subspecies_delete, name='subspecies-delete'),
 ]
 urlpatterns = [
     path('ajax/', include(url_ajax)),
