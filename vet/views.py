@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.utils import IntegrityError
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpRequest
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -30,9 +30,17 @@ class ParamCreateView(generic.CreateView):
         return initial
 
 
+class ConfirmDeleteView(generic.DeleteView):
+    template_name = 'vet/generic/generic_confirm_delete.html'
+
+
 class NoConfirmDeleteView(generic.DeleteView):
     def get(self, *args, **kwargs):
         return self.post(*args, **kwargs)
+
+
+class DeleteMode(ConfirmDeleteView):
+    pass
 
 
 class AjaxRequest:
@@ -69,7 +77,7 @@ class OwnerView:
         model = models.Owner
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, DeleteMode):
         model = models.Owner
         success_url = reverse_lazy('vet:owner-list')
 
@@ -95,7 +103,7 @@ class AnimalView:
         model = models.Animal
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, DeleteMode):
         model = models.Animal
 
         def get_success_url(self):
@@ -121,7 +129,7 @@ class PreventionView:
         model = models.Prevention
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, DeleteMode):
         model = models.Prevention
 
         def get_success_url(self):
@@ -147,7 +155,7 @@ class TherapyView:
         model = models.Therapy
         template_name = 'vet/generic/generic_form.html'
 
-    class Delete(LoginRequiredMixin, NoConfirmDeleteView):
+    class Delete(LoginRequiredMixin, DeleteMode):
         model = models.Therapy
 
         def get_success_url(self):
@@ -155,112 +163,141 @@ class TherapyView:
             return reverse_lazy('vet:animal-detail', kwargs={'pk': animal_pk})
 
 
-class DiagnosisView:
-    @staticmethod
-    @login_required
-    def create(request):
-        value = request.GET['value']
+@login_required
+def diagnosis_create(request: HttpRequest):
+    result = dict()
+    if request.method == 'POST':
+        value = request.POST['value']
         models.Diagnosis.objects.get_or_create(value=value)
-        return JsonResponse({})
+    else:
+        result['error'] = -1
+    return JsonResponse(result)
 
-    @staticmethod
-    @login_required
-    def update(request, pk):
-        value = request.GET['value']
+
+@login_required
+def diagnosis_update(request: HttpRequest, pk):
+    result = dict()
+    if request.method == 'POST':
+        value = request.POST['value']
         diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
         diagnosis.value = value
         diagnosis.save()
-        return JsonResponse({})
-
-    class List(LoginRequiredMixin, generic.ListView):
-        model = models.Diagnosis
-        template_name = 'vet/diagnosis/list.html'
-
-    @staticmethod
-    @login_required
-    def delete(request, pk):
-        diagnosis = get_object_or_404(models.Diagnosis, pk=pk)
-        diagnosis.delete()
-        return JsonResponse({})
+    else:
+        result['error'] = pk
+    return JsonResponse(result)
 
 
-class VaccinationView:
-    @staticmethod
-    @login_required
-    def create(request):
-        value = request.GET['value']
+@login_required
+def diagnosis_delete(request: HttpRequest, pk):
+    result = dict()
+    if request.method == 'POST':
+        vaccination = get_object_or_404(models.Diagnosis, pk=pk)
+        try:
+            vaccination.delete()
+        except IntegrityError:
+            result['error'] = pk
+    else:
+        result['error'] = pk
+    return JsonResponse(result)
+
+
+@login_required
+def vaccination_create(request):
+    result = dict()
+    if request.method == 'POST':
+        value = request.POST['value']
         models.Vaccination.objects.get_or_create(value=value)
-        return JsonResponse({})
+    else:
+        result['error'] = -1
+    return JsonResponse(result)
 
-    @staticmethod
-    @login_required
-    def update(request, pk):
-        value = request.GET['value']
+
+@login_required
+def vaccination_update(request: HttpRequest, pk):
+    result = dict()
+    if request.method == 'POST':
+        value = request.POST['value']
+        diagnosis = get_object_or_404(models.Vaccination, pk=pk)
+        diagnosis.value = value
+        diagnosis.save()
+    else:
+        result['error'] = pk
+    return JsonResponse(result)
+
+
+@login_required
+def vaccination_delete(request: HttpRequest, pk):
+    result = dict()
+    if request.method == 'POST':
         vaccination = get_object_or_404(models.Vaccination, pk=pk)
-        vaccination.value = value
-        vaccination.save()
-        return JsonResponse({})
-
-    class List(LoginRequiredMixin, generic.ListView):
-        model = models.Vaccination
-        template_name = 'vet/vaccination/list.html'
-
-    @staticmethod
-    @login_required
-    def delete(request, pk):
-        vaccination = get_object_or_404(models.Vaccination, pk=pk)
-        vaccination.delete()
-        return JsonResponse({})
+        try:
+            vaccination.delete()
+        except IntegrityError:
+            result['error'] = pk
+    else:
+        result['error'] = pk
+    return JsonResponse(result)
 
 
-class SubspeciesView:
-    @staticmethod
-    @login_required
-    def create(request):
-        species_str = request.GET['species']
-        subspecies_str = request.GET['subspecies']
-
+@login_required
+def subspecies_create(request):
+    result = dict()
+    if request.method == 'POST':
+        species_str = request.POST['species']
+        subspecies_str = request.POST['subspecies']
         species, c = models.Species.objects.get_or_create(value=species_str)
         subspecies, c = models.Subspecies.objects.get_or_create(value=subspecies_str, species=species)
+    else:
+        result['error'] = -1
+    return JsonResponse(result)
 
-        return JsonResponse({})
 
-    @staticmethod
-    @login_required
-    def update(request, pk):
-        species_str = request.GET['species']
-        subspecies_str = request.GET['subspecies']
-
+@login_required
+def subspecies_update(request: HttpRequest, pk):
+    result = dict()
+    if request.method == 'POST':
+        species_str = request.POST['species']
+        subspecies_str = request.POST['subspecies']
         subspecies = get_object_or_404(models.Subspecies, pk=pk)
-
         subspecies.value = subspecies_str
         subspecies.save()
-
         subspecies.species.value = species_str
         subspecies.species.save()
+    else:
+        result['error'] = pk
+    return JsonResponse(result)
 
-        return JsonResponse({})
 
-    class List(LoginRequiredMixin, generic.ListView):
-        template_name = 'vet/subspecies/list.html'
-        model = models.Subspecies
-
-    @staticmethod
-    @login_required
-    def delete(request, pk):
+@login_required
+def subspecies_delete(request: HttpRequest, pk):
+    result = dict()
+    if request.method == 'POST':
         subspecies = get_object_or_404(models.Subspecies, pk=pk)
         species = subspecies.species
-
-        content = dict()
         try:
             subspecies.delete()
         except IntegrityError:
-            content['error'] = pk
-
+            result['error'] = pk
         if not species.subspecies_set.exists():
             species.delete()
+    else:
+        result['error'] = pk
+    return JsonResponse(result)
 
-        return JsonResponse(content)
+
+class DiagnosisList(LoginRequiredMixin, generic.ListView):
+    model = models.Diagnosis
+    template_name = 'vet/diagnosis/list.html'
+
+
+class VaccinationList(LoginRequiredMixin, generic.ListView):
+    model = models.Vaccination
+    template_name = 'vet/vaccination/list.html'
+
+
+class SubspeciesList(LoginRequiredMixin, generic.ListView):
+    model = models.Subspecies
+    template_name = 'vet/subspecies/list.html'
 
 
 class Ajax:

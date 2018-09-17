@@ -71,6 +71,18 @@ $(function () {
         $(this).autocomplete("search", $(this).val());
     });
     $('#topNavBar .nav-link[href="' + window.location.pathname + '"]').parent().addClass('active');
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
     $('table[data-model-name] button.add').click(function () {
         let type = $(this).parents('table').attr('data-model-name');
         let $tr = $(this).parents('tr');
@@ -88,7 +100,7 @@ $(function () {
                     "value": $tr.children().eq(0).text()
                 };
         }
-        $.get(url, content, function (result) {
+        $.post(url, content, function (result) {
             if ('error' in result) {
                 $('#status_msg').css("color", "red").text("Ошибка при добавлении");
             } else {
@@ -115,7 +127,7 @@ $(function () {
                     "value": $tr.children().eq(0).text()
                 };
         }
-        $.get(url, content, function (result) {
+        $.post(url, content, function (result) {
             if ('error' in result) {
                 $('#status_msg').css("color", "red").text("Ошибка при обновлении");
             } else {
@@ -129,7 +141,7 @@ $(function () {
         let $tr = $(this).parents('tr');
         let pk = $tr.attr('id');
         let url = url_accelerate[type]['delete'] + pk;
-        $.get(url, function (result) {
+        $.post(url, function (result) {
             if ('error' in result) {
                 $('#status_msg').css("color", "red").text("Ошибка при удалении");
             } else {
