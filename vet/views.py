@@ -49,7 +49,7 @@ class AjaxRequest:
         result = []
         if request.user.is_authenticated:
             if request.is_ajax():
-                if request.metod == 'GET':
+                if request.method == 'GET':
                     kwargs = request.GET
                     result = cls.get_queryset_value(kwargs)
 
