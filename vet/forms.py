@@ -62,7 +62,7 @@ class OwnerAutocompleteChoiceForm(ParamForm):
 
         if self.instance_update is not None:
             self.initial['owner_id'] = self.instance_update.owner.pk
-            self.initial['owner'] = self.instance_update.owner.__str__()
+            self.initial['owner'] = str(self.instance_update.owner)
 
     owner = AutocompleteCharField(label=_('Владелец'), max_length=50, strip=False)
     owner_id = forms.IntegerField(widget=forms.HiddenInput(), label="")

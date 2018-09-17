@@ -49,8 +49,9 @@ class AjaxRequest:
         result = []
         if request.user.is_authenticated:
             if request.is_ajax():
-                kwargs = request.GET
-                result = cls.get_queryset_value(kwargs)
+                if request.metod == 'GET':
+                    kwargs = request.GET
+                    result = cls.get_queryset_value(kwargs)
 
         return JsonResponse(list(result), safe=False)
 

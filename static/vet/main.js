@@ -71,14 +71,9 @@ $(function () {
         $(this).autocomplete("search", $(this).val());
     });
     $('#topNavBar .nav-link[href="' + window.location.pathname + '"]').parent().addClass('active');
-
-    function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
-            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            if ((settings.type ==='POST') && !this.crossDomain) {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
         }
